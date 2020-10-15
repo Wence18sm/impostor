@@ -1,49 +1,88 @@
+//
+// ---------------------------------------	PRUEBAS DE CODIGO -------------------------------------------
+// 
+//Mediante Jasmine 3.6.0
+//
 describe("El juego del impostor", function() {
   var juego;
   var usr;
-  // si le pones delante una x y pones xit ese text no se ejecuta.
+
   beforeEach(function() {
-    juego = new Juego();
-    usr = new Usuario("Pepe",juego);
+  	juego=new Juego();
+  	usr=new Usuario("Pepe",juego);
   });
 
-  it("El juego incialmente no tiene partidas", function() {
+  it("Comprobar valores iniciales del juego", function() {
+  	//Si no hay partidas, el array asociativo debe de ser 0
   	expect(Object.keys(juego.partidas).length).toEqual(0);
+  	//El nombre de usuario es el que hemos implementado
   	expect(usr.nick).toEqual("Pepe");
-  	//el juego esta definido
+  	//El juego esta definido
   	expect(usr.juego).not.toBe(undefined);
   });
 
-  it("El usuario Pepe crea una partida de 4 jugadores", function() {
-  	var codigo = usr.crearPartida(4);
-  	//comprobamos que el creador es el dueño de la partida
-  	expect(juego.partidas[codigo].nickOwner).toEqual(usr.nick);
-  	//comprobamos que el codigo este definido.
-  	expect(codigo).not.toBe(undefined);
-  	//comprobamos el nuemro maximo de jugadores 
-  	expect(juego.partidas[codigo].maximo).toEqual(4);
-  	//comprobamos que estamos en la fase incial
-  	expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
-  });
+  describe("El usr Pepe crea una partida de 4 jugadores",function(){
+	var codigo;
+	beforeEach(function() {
+		//Creamos la partida
+	  	codigo=usr.crearPartida(4);
+	  });
 
-  it("Un usuario quiere unirse a la partida creada",function(){
-  	
-  	var codigo = usr.crearPartida(4);
-  	expect(juego.partidas[codigo].maximo).toEqual(4);
+	it("Se comprueba la partida",function(){ 
+		//se comprueba si la partida esta definida	
+	  	expect(codigo).not.toBe(undefined);
+	  	//Se comprueba que el owner de la partida es su creador
+	  	expect(juego.partidas[codigo].nickOwner).toEqual(usr.nick);
+	  	//se comprueba el maximo que le hemos puesto a la partida (Condicion)
+	  	expect(juego.partidas[codigo].maximo).toEqual(4);
+	  	//se comprueba que al crearla esta en fase Inicial
+	  	expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+	  	//se comprueba que cuando se crea y no se une nadie, solo debe de estar en owner en la partida
+	 	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(1);
+	  });
 
-  	juego.unirAPartida(codigo,"Jose");
-  	expect(Object.keys(juego.partidas[codigo].usuarios).length).toEqual(2);
+	it("Varios usuarios se unen a la partida",function(){
+		//unimos a un usuario a la partida
+		//Comprobamos el numero de usuarios 
+		//Como no se ha llegado al maximo debe de estar en fase Inicial
+		juego.unirAPartida(codigo,"ana");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(2);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		//unimos a un usuario a la partida
+		//Comprobamos el numero de usuarios 
+		//Como no se ha llegado al maximo debe de estar en fase Inicial
+		juego.unirAPartida(codigo,"isa");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(3);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		//unimos a un usuario a la partida
+		//Comprobamos el numero de usuarios 
+		//Como se ha llegado al maximo debe de estar en fase Completado  	
+		juego.unirAPartida(codigo,"tomas");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(4);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("completado");
+	  });
 
-  	juego.unirAPartida(codigo,"Ana");
-  	expect(Object.keys(juego.partidas[codigo].usuarios).length).toEqual(3);
-
-  	juego.unirAPartida(codigo,"Luis");
-  	expect(Object.keys(juego.partidas[codigo].usuarios).length).toEqual(4);
-
-
-  });
-
-
-
-
+	it("Pepe inicia la partida",function(){
+		//Igual que la prueba anterior, excepto porque aqui se inicia la partida.
+		//Misma secuencia + Iniciar partida.
+		juego.unirAPartida(codigo,"ana");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(2);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		juego.unirAPartida(codigo,"isa");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(3);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");	  	
+		juego.unirAPartida(codigo,"tomas");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(4);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("completado");		
+		usr.iniciarPartida();
+		expect(juego.partidas[codigo].fase.nombre).toEqual("jugando");
+	})
+   });
 })

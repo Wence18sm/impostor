@@ -27,6 +27,7 @@ function Juego() {
 		}
 
 	}
+	//obtenemos el codigo de la partida
 	this.obtenerCodigo = function(){
 		let cadena = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 		let letras = cadena.split('');
@@ -40,6 +41,7 @@ function Juego() {
 }
 //////////////////////////////
 //// PARTIDA
+/////////////////////////////
 function Partida(num,owner){
 	this.maximo = num;
 	this.nickOwner= owner;
@@ -94,6 +96,7 @@ function Partida(num,owner){
 } 
 /////////////////////////
 // USUARIO
+/////////////////////////
 function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego = juego;
@@ -197,9 +200,12 @@ function Final(){
 		console.log("sin sentido");
 	}
 };
+
+
+
 /////////////////////////////////////////////////////
 // FUNCIONES AUXILIARES
-
+////////////////////////////////////////////////////
 function randomInt(low, high) {
 	//devuelve un numero aleatorio entre dos rangos
 	return Math.floor(Math.random() * (high - low) + low);
