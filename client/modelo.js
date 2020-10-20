@@ -6,16 +6,19 @@
 function Juego() {
 	this.partidas = {};//que colleccion --> hemos decidido un array asociativo/ diccionario
 	this.crearPartida = function(num,owner){
-
-		//generar un codigo de 6 letras aleatorio
-		let codigo= this.obtenerCodigo();
-		//comprobar que no se usa
-		if (!this.partidas[codigo]){
-			this.partidas[codigo] = new Partida(num,owner.nick);
-			owner.partida = this.partidas[codigo];
+		//Comprobar los limites de num
+		if (4<=num && num<=10){
+			//generar un codigo de 6 letras aleatorio
+			let codigo= this.obtenerCodigo();
+			//comprobar que no se usa
+			if (!this.partidas[codigo]){
+				this.partidas[codigo] = new Partida(num,owner.nick);
+				owner.partida = this.partidas[codigo];
+			}
+			return codigo;
+		}else {
+		console.log("El numero no esta entre el rango");
 		}
-		return codigo;
-
 		//crear el objeto partida: num owner
 
 		//asignar la partida 
@@ -38,6 +41,8 @@ function Juego() {
 		}
 		return codigo.join('');
 	}
+	
+
 }
 //////////////////////////////
 //// PARTIDA
@@ -48,6 +53,7 @@ function Partida(num,owner){
 	this.fase = new Inicial();
 	this.usuarios = {};//el index 0 sera el owner
 	//this.usuarios ={}; //version diccionario
+	this.encargos = ["jardines","calles", "mobiliario", "basuras","electricidad"];
 
 	this.agregarUsuario = function(nick){
 			this.fase.agregarUsuario(nick,this);
@@ -67,8 +73,9 @@ function Partida(num,owner){
 			cont = cont + 1;
 		}
 		this.usuarios[nuevo] = new Usuario(nuevo);
+		this.usuarios[nuevo].partida = this;
 
-		this.comprobarMinimo();
+		//this.comprobarMinimo();
 	}
 
 	this.comprobarMinimo = function(){
@@ -83,6 +90,13 @@ function Partida(num,owner){
 		this.fase.iniciarPartida(this);
 	}
 
+	this.puedeIniciarPartida = function (){
+		this.asignarEncargo();
+		this.asignarImpostor();
+		this.fase = new Jugando();
+	}
+
+
 	this.abandonarPartida = function(nick){
 		this.fase.abandonarPartida(nick,this);
 
@@ -91,6 +105,26 @@ function Partida(num,owner){
 		delete this.usuarios[nick];
 	}
 
+	//Asignar encargos
+	this.asignarEncargo = function (){
+		for(usr in this.usuarios){
+			this.usuarios[usr].encargo = this.encargos[randomInt(0,this.encargos.length)];
+		}
+		
+	}
+	//Asignar Impostor 
+	this.asignarImpostor = function(){
+		let key = Object.keys(this.usuarios);
+		this.usuarios[key[randomInt(0,key.length)]].impostor = true;
+	}
+	//Funcion para comprobar si tenemos un impostor.
+	this.tenemosUnImpostor = function(){
+		for (var usr in this.usuarios){
+			if (this.usuarios[usr].impostor){
+				return true;
+			}
+		}
+	}
 
 	this.agregarUsuario(owner);
 } 
@@ -101,6 +135,8 @@ function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego = juego;
 	this.partida
+	this.impostor = false;
+	this.encargo= " ";
 	this.crearPartida = function(num){
 		return this.juego.crearPartida(num,this);
 	}
@@ -154,7 +190,11 @@ function Completado(){
 	}
 
 	this.iniciarPartida = function (partida){
-		partida.fase = new Jugando();
+		//llama a puedeIniciarPartida();
+		partida.puedeIniciarPartida();
+		//partida.fase = new Jugando();
+		//asignar encargos: secuenciamlente a todos los usuarios
+		//asignar impostor: dado el array de usuarios (object.keys) elegimos uno y le aginamos impostor a true.
 	}
 
 	this.abandonarPartida = function(nick,partida){
@@ -210,3 +250,25 @@ function randomInt(low, high) {
 	//devuelve un numero aleatorio entre dos rangos
 	return Math.floor(Math.random() * (high - low) + low);
 }
+
+function Inicio(){
+	juego = new Juego();
+	var usr = new Usuario("Pepe",juego);
+	var codigo = usr.crearPartida(8);
+
+	juego.unirAPartida(codigo,"verde");
+	juego.unirAPartida(codigo,"azul");
+	juego.unirAPartida(codigo,"rojo");
+	juego.unirAPartida(codigo,"arcoiris");
+	juego.unirAPartida(codigo,"amarillo");
+	juego.unirAPartida(codigo,"rosa");
+	juego.unirAPartida(codigo,"blanco");
+	juego.unirAPartida(codigo,"negro");
+	juego.unirAPartida(codigo,"trasnparente");
+
+
+
+	usr.iniciarPartida();
+}
+
+
