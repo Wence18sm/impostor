@@ -107,6 +107,37 @@ describe("El juego del impostor", function() {
 
 	})
 
+	it("Un jugador quiere abandonar la partida si estar iniciada y se elimina la partida",function(){
+		juego.unirAPartida(codigo,"ana");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(2);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		juego.unirAPartida(codigo,"isa");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(3);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");	  	
+		juego.unirAPartida(codigo,"tomas");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(4);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("completado");		
+		//usr.iniciarPartida();
+		//expect(juego.partidas[codigo].fase.nombre).toEqual("jugando");
+		//Abandonar la partida
+		juego.partidas[codigo].abandonarPartida("tomas");
+		var num=Object.keys(juego.partidas[codigo].usuarios).length;
+		expect(num).toEqual(3);
+
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		juego.partidas[codigo].abandonarPartida("ana");
+		juego.partidas[codigo].abandonarPartida("isa");
+		juego.partidas[codigo].abandonarPartida("Pepe");
+
+		juego.eliminarPartida(codigo);
+		expect(juego.partidas[codigo]).toBe(undefined);
+
+
+	})
+
 	it("Se quiere asignar un impostor",function(){
 		juego.unirAPartida(codigo,"ana");
 	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
@@ -147,6 +178,14 @@ describe("El juego del impostor", function() {
 			expect(juego.partidas[codigo].usuarios[usu].encargo).not.toBe(undefined);
 		}
 
+	})
+
+	it("No se puede crear un partida si el numero de jugadores no esta dentro del limite",function(){
+		var codigo=juego.crearPartida(3,usr);
+		expect(codigo).toEqual("fallo");
+
+		codigo=juego.crearPartida(11,usr);
+		expect(codigo).toEqual("fallo");
 	})
 
    });
