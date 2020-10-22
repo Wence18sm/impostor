@@ -178,11 +178,125 @@ function Partida(num,owner,codigo){
 		this.skip +=1;
 	}
 	
+	//
+	//
+	//Auxiliares en partida
+	//
+	//
+	// numero de impostores vivos 
+	this.numeroImpostoresVivos=function(){
+		let cont=0;
+		for (var key in this.usuarios) {
+			if (this.usuarios[key].impostor && this.usuarios[key].estado.nombre=="vivo"){
+				cont++;
+			}
+		}
+		return cont;
+	}
+	//numero de ciudadanos vivos
+	this.numeroCiudadanosVivos=function(){
+		let cont=0;
+		for (var key in this.usuarios) {
+			if (!this.usuarios[key].impostor && this.usuarios[key].estado.nombre=="vivo"){
+				cont++;
+			}
+		}
+		return cont;
+	}
+	//ganan los impostores
+	this.gananImpostores=function(){
+		//comprobar si impostores vivos>=ciudadanos vivos
+		//(en caso cierto: cambiar fase a Final)
+		if(this.numeroImpostoresVivos() >= this.numeroCiudadanosVivos()){
+			return true;
+		}
+
+	}
+	//ganan los ciudadanos
+	this.gananCiudadanos=function(){
+		//comprobar que numero impostores vivos es 0
+		if(this.numeroImpostoresVivos() == 0){
+			return true;
+		}
+	}
+	//usuario mas votado:
+	this.maxVotado = function(){
+		var max = 0;
+		var usr = undefined;
+		for (var key in this.usuarios){
+			//Solo realizamos la comparacion si estan vivos
+			if(this.usuarios[key].estado.nombre == "vivo"){
+				//si su numero de votos es mayor que el maximo
+				//se guarda el maximo y el usr
+				if (max < this.usuarios[key].votos){
+					max = this.usuario[key].votos;
+					usr = this.usuario[key];
+				}
+			}
+		}
+		return usr;
+	}
+	//Numero de usuarios que han hecho skip
+	this.numeroSkips = function(){
+		let cont = 0
+		for(var key in this.usuarios){
+			if(this.usuarios[key].estado.nombre == "vivo" && this.usuarios[key].skip){
+				cont ++
+			}
+		}
+		return cont;
+	}
+
+	//Reiniciar contadores 
+	this.reiniciarContadores=function(){
+		//recorrer usuarios vivos y poner votos a 0 y skip a false
+		for (var key in this.usuarios){
+			if(this.usuarios[key].estado.nombre == "vivo"){
+				this.usuarios[key].votos = 0;
+				this.usuarios[key].skip = false;
+			}
+		}
+	}
+
+	//Comprobar final
+	this.comprobarFinal = function(){
+		if (this.gananImpostores()){
+			this.finPartida();
+		}
+
+		if (this.gananCiudadanos()){
+			this.finPartida();
+		}
+	}
+	//Comprobar la votacion
+	this.comprobarVotacion=function(){
+		let elegido=this.masVotado(); // hacer el mas votado
+		if (elegido && elegido.votos>this.numeroSkips()){
+			elegido.esAtacado();
+		}
+	}
 
 
 	/////////////////////////
 	// Agregacion del usuario
 	this.agregarUsuario(owner);
+
+
+	//final de la partida 
+	this.finPartida = function(){
+		this.fase = new Final();
+	}
+
+	this.lanzarVotacion = function(){
+		this.fase = new Votacion;
+	}
+
+	this.votar = function(sospechoso){
+		this.fase.votar(sospechoso)
+	}
+	this.puedeVotar =  function(sospechoso){
+		this.usuarios[sospechoso].esVotado();
+	}
 } 
 /////////////////////////
 // USUARIO
@@ -196,7 +310,10 @@ function Usuario(nick,juego){
 
 	this.estado = new Vivo();
 
-	this votos = 0; 
+	this.votos = 0; 
+	this.skip = false;
+
+	this.haVotado= false;
 
 	//////////
 	this.crearPartida = function(num){
@@ -220,13 +337,18 @@ function Usuario(nick,juego){
 	this.jugadorAtacaA = function(nick){
 		this.partida.atacar(nick);
 	}
-	//Votar
-	this.votarA = function(nick){
-		this.partida.votar(nick);
+	
+	this.esVotado = function (){
+		this.votos ++;
 	}
 
-	this.votarSkip = function(){
-		this.partida.votarSkip();
+	//lanzar votacion 
+	this.lanzarVotacion = function(){
+		this.estado.lanzarVotacion(this);
+	}
+
+	this.lanzarVotacion = function(){
+		this.partida.lanzarVotacion();
 	}
 
 }
@@ -322,6 +444,20 @@ function Jugando(){
 		// To do
 		this.puedeAtacar(nick);
 	}
+
+	this.lanzarVotacion = function(partida){
+		partida.puedeLanzarVotacion();
+	}
+};
+function Votacion(){
+
+	this.nombre = "votacion"
+	this.agregarUsuario = function(nick,partida){}
+	this.iniciarPartida = function (partida){}
+	this.abandonarPartida = function(nick,partida){}
+	this.atacar = function(){
+		console.log("En el estado final no se puede atacar");
+	}
 };
 
 function Final(){
@@ -350,14 +486,21 @@ function Final(){
 
 function Vivo(){
 	//esAtacado 
+	this.nombre= "vivo";
 
-}
+	this.lanzarVotacion = function(usr){
+		usr.pudeLanzarVotacion();
+	}
+
+};
 
 function Fantasma(){
+	this.nombre = "fantasma";
 
-}
-
-
+	this.lanzarVotacion = function(usr){
+		//no puede votar
+	}
+};
 
 /////////////////////////////////////////////////////
 // FUNCIONES AUXILIARES
