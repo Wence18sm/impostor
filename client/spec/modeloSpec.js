@@ -188,5 +188,24 @@ describe("El juego del impostor", function() {
 		expect(codigo).toEqual("fallo");
 	})
 
+	it("Un Impostor ataca a un ciudadano",function(){
+		juego.unirAPartida(codigo,"ana");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(2);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+		juego.unirAPartida(codigo,"isa");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(3);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");	  	
+		juego.unirAPartida(codigo,"tomas");
+	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
+	  	expect(num).toEqual(4);
+		expect(juego.partidas[codigo].fase.nombre).toEqual("completado");		
+		usr.iniciarPartida();
+		expect(juego.partidas[codigo].fase.nombre).toEqual("jugando");
+		//Un impostor ataca a un ciudadano.
+		
+	});
+
    });
 })
