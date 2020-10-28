@@ -1,0 +1,26 @@
+{
+  "name": "impostor",
+  "version": "1.0.0",
+  "description": "trabajo de procesos",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine-node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wence18sm/impostor.git"
+  },
+  "keywords": [
+    "juego"
+  ],
+  "author": "WSM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wence18sm/impostor/issues"
+  },
+  "homepage": "https://github.com/Wence18sm/impostor#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jasmine-node": "^3.0.0"
+  }
+}
