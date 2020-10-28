@@ -26,9 +26,11 @@ function Juego() {
 		//this.partidas[codigo] = nueva partida
 	}
 	this.unirAPartida = function(codigoPartida,nick){
+		var res = -1;
 		if (this.partidas[codigoPartida]){
-			this.partidas[codigoPartida].agregarUsuario(nick);
+			res = this.partidas[codigoPartida].agregarUsuario(nick);
 		}
+		return res;
 
 	}
 	//obtenemos el codigo de la partida
@@ -568,23 +570,23 @@ function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low) + low);
 }
 
-function Inicio(){
-	juego = new Juego();
-	var usr = new Usuario("Pepe",juego);
-	var codigo = usr.crearPartida(8);
+// function Inicio(){
+// 	juego = new Juego();
+// 	var usr = new Usuario("Pepe",juego);
+// 	var codigo = usr.crearPartida(8);
 
-	juego.unirAPartida(codigo,"verde");
-	juego.unirAPartida(codigo,"azul");
-	juego.unirAPartida(codigo,"rojo");
-	juego.unirAPartida(codigo,"arcoiris");
-	juego.unirAPartida(codigo,"amarillo");
-	juego.unirAPartida(codigo,"rosa");
-	juego.unirAPartida(codigo,"blanco");
-	juego.unirAPartida(codigo,"negro");
-	juego.unirAPartida(codigo,"trasnparente");
+// 	juego.unirAPartida(codigo,"verde");
+// 	juego.unirAPartida(codigo,"azul");
+// 	juego.unirAPartida(codigo,"rojo");
+// 	juego.unirAPartida(codigo,"arcoiris");
+// 	juego.unirAPartida(codigo,"amarillo");
+// 	juego.unirAPartida(codigo,"rosa");
+// 	juego.unirAPartida(codigo,"blanco");
+// 	juego.unirAPartida(codigo,"negro");
+// 	juego.unirAPartida(codigo,"trasnparente");
 
-	usr.iniciarPartida();
-}
+// 	usr.iniciarPartida();
+// }
 
 module.exports.Juego = Juego;
 module.exports.Usuario= Usuario;

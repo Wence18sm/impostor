@@ -25,6 +25,34 @@ app.get('/', function (request, response) {
 //Aqui trabajamos
 // '/usuarios'
 
+// nombre-ruta-api/:parametro1/:parametro2...
+//app.get('/nuevoUsuario/:nick',function(request,response){
+	//var nick=request.params.nick;
+	//var usr= new modelo.Usuario(nick);
+
+//});
+
+app.get('/crearPartida/:nick/:numero',function(request,response){
+	var nick=request.params.nick;
+	var numero = parseInt(request.params.numero);
+	//ojo, nick nulo o numero nulo
+	//var num = 4;
+	var usr= new modelo.Usuario(nick);
+	var codigo= juego.crearPartida(numero,usr);
+
+	response.send({"codigo":codigo});
+
+});
+
+app.get('/unirAPartida/:nick/:codigoPartida',function(request,response){
+	var nick=request.params.nick;
+	var codigoPartida = request.params.codigoPartida;
+
+	var res = juego.unirAPartida(nick,codigoPartida);
+
+	response.send({"res":res});
+
+});
 
 
 //Inicio del index.js
