@@ -307,7 +307,7 @@ function Partida(num,owner,codigo){
 	this.votar = function(sospechoso, votante){
 		if(!this.usuarios[votante].haVotado){
 			if(sospechoso == 'skip'){
-				this.usuarios[sospechoso].skip ++;
+				this.skip ++;
 				this.usuarios[votante].haVotado = true;
 			}else{
 				this.usuarios[sospechoso].votos ++;
