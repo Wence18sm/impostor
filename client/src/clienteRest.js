@@ -12,5 +12,11 @@ function ClienteRest(){
 		});
 	};
 
+	this.listaPartidas=function(){
+		$.getJSON("/listaPartidas",function(data){    
+    		console.log(data);
+		});
+	};
+
 
 }

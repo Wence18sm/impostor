@@ -54,6 +54,11 @@ app.get('/unirAPartida/:nick/:codigoPartida',function(request,response){
 
 });
 
+app.get('/listaPartidas',function(request,response){
+	var lista = juego.listaPartidas();
+	response.send(lista);
+});
+
 
 //Inicio del index.js
 server.listen(app.get('port'), function () {

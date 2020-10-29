@@ -26,11 +26,11 @@ function Juego() {
 		//this.partidas[codigo] = nueva partida
 	}
 	this.unirAPartida = function(codigoPartida,nick){
-		var res = -1;
+		//var res = -1;
 		if (this.partidas[codigoPartida]){
-			res = this.partidas[codigoPartida].agregarUsuario(nick);
+			this.partidas[codigoPartida].agregarUsuario(nick);
 		}
-		return res;
+		//return res;
 
 	}
 	//obtenemos el codigo de la partida
@@ -49,6 +49,23 @@ function Juego() {
 		delete this.partidas[codigo];
 	}
 	
+	this.listaPartidas = function(){
+		var listaPartidas = [];
+		var huecos = 0;
+		var num = 0;
+		for (var key in this.partidas){
+			var partida = this.partidas[key];
+			num = this.partidas[key].obtenerHuecos();
+			if (num>0)
+			{
+			listaPartidas.push({"codigo":key,"huecos":num});
+			}
+		}
+		return listaPartidas;
+	}
+	//this.iniciarPartida = function(nick,codigo){
+
+	//}
 
 }
 //////////////////////////////
@@ -64,6 +81,14 @@ function Partida(num,owner,codigo){
 	this.encargos = ["jardines","calles", "mobiliario", "basuras","electricidad"];
 
 	this.skip = 0;
+
+	//Obtener huecos 
+	this.obtenerHuecos = function(){
+		var huecos;
+		huecos = this.maximo - (Object.keys(this.usuarios).length);
+		return huecos;
+	}
+
 
 	//// Agregar usuario
 	this.agregarUsuario = function(nick){
