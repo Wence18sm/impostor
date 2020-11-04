@@ -238,10 +238,6 @@ describe("El juego del impostor", function() {
 		expect(numVotos).toEqual(1);
 		//Comprobamos que Tomas ha votado
 		expect(juego.partidas[codigo].usuarios["tomas"].haVotado).toEqual(true);
-		//Se vota skip
-		juego.partidas[codigo].usuarios["ana"].votarJugador("skip");
-		numSkip = juego.partidas[codigo].skip;
-		expect(numSkip).toEqual(1);
 
 	});
 
@@ -267,6 +263,8 @@ describe("El juego del impostor", function() {
 		juego.partidas[codigo].usuarios["ana"].votarJugador("skip");
 		numSkip = juego.partidas[codigo].skip;
 		expect(numSkip).toEqual(1);
+
+		expect(juego.partidas[codigo].usuarios["ana"].haVotado).toEqual(true);
 	});
 
 

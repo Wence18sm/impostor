@@ -3,7 +3,9 @@
 <head>
 	<title>Impostor</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	<script src="client/src/clienteRest.js"></script>
+	<script src="client/src/clienteWS.js"></script>
 </head>
 <body>
 El punto de entrada del juego
@@ -12,6 +14,7 @@ El punto de entrada del juego
 	//Inicio()
 
 	var rest = new ClienteRest();
+	var ws = new ClienteWS();
 </script>
 </body>
 </html>	

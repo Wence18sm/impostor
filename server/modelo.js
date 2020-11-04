@@ -31,6 +31,7 @@ function Juego() {
 			this.partidas[codigoPartida].agregarUsuario(nick);
 		}
 		//return res;
+		
 
 	}
 	//obtenemos el codigo de la partida

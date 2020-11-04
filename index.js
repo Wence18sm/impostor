@@ -3,9 +3,12 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var bodyParser = require("body-parser");
+var io = require('socket.io').listen(server);
 //Agramos la dependencia respecto la capa API rest y mi capa de logica
 var modelo=require("./server/modelo.js");
+var wss = require("./server/servidorWS.js");
 
+var servidorWS=new wss.ServidorWS();
 
 app.set('port', process.env.PORT || 5000);
 
@@ -66,6 +69,7 @@ server.listen(app.get('port'), function () {
 });
 
 
+servidorWS.lanzarSocketSrv(io,juego);
 
 /////----- Solo si utilizamos express
 // app.listen(app.get('port'), function () {
