@@ -12,8 +12,8 @@ function Juego() {
 			let codigo= this.obtenerCodigo();
 			//comprobar que no se usa
 			if (!this.partidas[codigo]){
-				this.partidas[codigo] = new Partida(num,owner.nick,codigo);
-				owner.partida = this.partidas[codigo];
+				this.partidas[codigo] = new Partida(num,owner,codigo,this);
+				//owner.partida = this.partidas[codigo];
 			}
 			return codigo;
 		}else {
@@ -50,7 +50,7 @@ function Juego() {
 		delete this.partidas[codigo];
 	}
 	
-	this.listaPartidas = function(){
+	this.listaPartidasDisponibles = function(){
 		var listaPartidas = [];
 		var huecos = 0;
 		var num = 0;
@@ -64,19 +64,40 @@ function Juego() {
 		}
 		return listaPartidas;
 	}
-	//this.iniciarPartida = function(nick,codigo){
 
-	//}
+	this.listaPartidas = function(){
+		var listaPartidas = [];
+		var huecos = 0;
+		var num = 0;
+		for (var key in this.partidas){
+			var partida = this.partidas[key];
+			var owner = this.partidas[key].nickOwner;
+			
+			listaPartidas.push({"codigo":key,"huecos":num});
+			
+		}
+		return listaPartidas;
+	}
+	
+
+
+	this.iniciarPartida = function(nick,codigo){
+		var owner = this.partidas[codigo].nickOwner;
+		if(nick == owner){
+			this.partidas[codigo].iniciarPartida();
+		}
+	}
 
 }
 //////////////////////////////
 //// PARTIDA
 /////////////////////////////
-function Partida(num,owner,codigo){
+function Partida(num,owner,codigo,juego){
 	this.maximo = num;
 	this.nickOwner= owner;
 	this.fase = new Inicial();
 	this.codigo= codigo;
+	this.juego = juego;
 	this.usuarios = {};//el index 0 sera el owner
 	//this.usuarios ={}; //version diccionario
 	this.encargos = ["jardines","calles", "mobiliario", "basuras","electricidad"];
@@ -151,6 +172,10 @@ function Partida(num,owner,codigo){
 
 		if (!this.comprobarMinimo()){
 			this.fase = new Inicial();
+		}
+
+		if (this.numJugadores()<=0){
+			this.juego.eliminarPartida(this.codigo);
 		}
 
 	}

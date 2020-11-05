@@ -20,7 +20,7 @@ function ServidorWS(){
 		    socket.on('crearPartida', function(nick,numero) {
 		        console.log('usuario nick: '+nick+" crea partida numero: "+numero);
 		        var usr=new modelo.Usuario(nick);
-				var codigo=juego.crearPartida(numero,usr);
+				var codigo=juego.crearPartida(numero,nick);
 				socket.join(codigo);	        				
 		       	cli.enviarRemitente(socket,"partidaCreada",{"codigo":codigo,"owner":nick});		        		        
 		    });
@@ -38,7 +38,21 @@ function ServidorWS(){
 		        //Para pensar muy concienzudamente
 		        //Controlar si nick es el owner de la partida -- se controla en la capa de negocio
 		        //Contestar a todos mandandole la fase de la partida
-		        //cli.enviarATodos(socket,codigo,"partidaIniciada",{"nick":nick})	
+		        //cli.enviarATodos(socket,codigo,"partidaIniciada",{"nick":nick})
+		        juego.iniciarPartida(nick,codigo);
+		        var fase=juego.partidas[codigo].fase.nombre;
+		        cli.enviarATodos(io,codigo,"partidaIniciada",fase);	
+						        		        
+		    });
+
+		    socket.on('listaDePartidasDisponibles', function() {
+		        var lista = juego.listaPartidasDisponibles();
+		        cli.enviarRemitente(io,"listaDePartidasDisponibles",lista);	
+						        		        
+		    });
+		    socket.on('listaDePartidas', function() {
+		        var lista = juego.listaPartidas();
+		        cli.enviarRemitente(io,"listaDePartidas",lista);	
 						        		        
 		    });
 
