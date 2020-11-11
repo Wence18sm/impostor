@@ -29,7 +29,7 @@ function ServidorWS(){
 		        //nick nulo o cadena vacia
 				var res=juego.unirAPartida(codigo,nick);
 				socket.join(codigo);
-				var owner = juego.partidas[codigo].nickOwner;
+				//var owner = juego.partidas[codigo].nickOwner;
 				console.log('usuario nick: '+nick+" se une a la partida con el codigo: "+codigo);        				
 		       	cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick});
 		       	cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",{"nick":nick})		        		        
@@ -40,7 +40,7 @@ function ServidorWS(){
 		        //Contestar a todos mandandole la fase de la partida
 		        //cli.enviarATodos(socket,codigo,"partidaIniciada",{"nick":nick})
 		        juego.iniciarPartida(nick,codigo);
-		        var fase=juego.partidas[codigo].fase.nombre;
+		        var fase = juego.partidas[codigo].fase.nombre;
 		        cli.enviarATodos(io,codigo,"partidaIniciada",fase);	
 						        		        
 		    });
@@ -54,6 +54,44 @@ function ServidorWS(){
 		        var lista = juego.listaPartidas();
 		        cli.enviarRemitente(io,"listaDePartidas",lista);	
 						        		        
+		    });
+
+		    socket.on('lanzarVotacion', function(nick,codigo) {
+		       juego.lanzarVotacion(nick,codigo);
+		       var fase = juego.partidas[codigo].fase.nombre;
+		       cli.enviarATodos(io,codigo,"votacionLanzada",fase);
+		    });
+
+		    socket.on('saltarVoto', function(nick,codigo) {
+		    	var partida = juego.partidas[codigo];
+		       juego.saltarVoto(nick,codigo);
+
+		       if(partida.todosHanVotado()){
+		       		//enviar a todos el mas votado
+		       		var data={"elegido":partida.elegido,"fase":partida.fase.nombre}
+		       		cli.enviarATodos(io,codigo,"finalVotacion",data);
+		       }else{
+		       		//enviar la lista de los que han votado
+		       		cli.enviarATodos(io,codigo,"haVotado",partida.listaHanVotado());
+		       }
+
+		    });
+		    socket.on('votar', function(nick,codigo,sospechoso) {
+		    	var partida = juego.partidas[codigo];
+		       juego.votar(nick,codigo,sospechoso);
+
+		       if(partida.todosHanVotado()){
+		       		//enviar a todos el mas votado
+		       		var data={"elegido":partida.elegido,"fase":partida.fase.nombre}
+		       		cli.enviarATodos(io,codigo,"finalVotacion",data);
+		       }else{
+		       		//enviar la lista de los que han votado
+		       		cli.enviarATodos(io,codigo,"haVotado",partida.listaHanVotado());
+		       }
+
+		    });
+		    socket.on('obtenerEncargo', function(nick,codigo) {
+		     	cli.enviarRemitente(socket,"recibirEncargo",juego.obtenerEncargo(nick,codigo));
 		    });
 
 

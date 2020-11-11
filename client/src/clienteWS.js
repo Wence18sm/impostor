@@ -25,6 +25,20 @@ function ClienteWS(){
 		this.socket.emit("listaDePartidas");
 	}
 
+	this.lanzarVotacion = function(){
+		this.socket.emit('lanzarVotacion',this.nick,this.codigo)
+	}
+	this.saltarVoto = function(){
+		this.socket.emit('saltarVoto',this.codigo,this.nick)
+	}
+	this.votar=function(sospechoso){
+		this.socket.emit('votar',this.nick,this.codigo,sospechoso)
+	}
+	this.obtenerEncargo = function(){
+		this.socket.emit('obtenerEncargo',this.nick,this.codigo)
+	}
+
+
 
 	
 	
@@ -53,7 +67,7 @@ function ClienteWS(){
 		});
 		this.socket.on('nuevoJugador',function(data){
 			console.log(data.nick+" se une a la partida");
-			cli.iniciarPartida();//absurdo paco
+			//cli.iniciarPartida();//absurdo paco
 		});
 		this.socket.on('partidaIniciada',function(fase){
 			console.log("La partida esta en fase: "+fase);
@@ -64,17 +78,36 @@ function ClienteWS(){
 		this.socket.on('listaDePartidas',function(lista){
 			console.log(lista);
 		});
+		this.socket.on('votacionLanzada',function(data){
+			console.log(data);
+		});
+		//final de la votacion
+		//cuantos han votado
+		this.socket.on('saltarVoto',function(data){
+			console.log(data);
+		});
+		this.socket.on('finalVotacion',function(data){
+			console.log(data);
+		});
+		this.socket.on('haVotado',function(data){
+			console.log(data);
+		});
+		this.socket.on('recibirEncargo',function(data){
+			console.log(data);
+		});
 
 	}
 	// El constructor del objeto lo llama:
 	this.ini();
 
 }
-// no hace falta exporta = anarquia 
+// no hace falta exporta = anarquia
+var ws2,ws3,ws4;
+
 function pruebasWS(){
-	var ws2=new ClienteWS();
-	var ws3=new ClienteWS();
-	var ws4=new ClienteWS();
+	 ws2=new ClienteWS();
+	 ws3=new ClienteWS();
+	 ws4=new ClienteWS();
 
 	ws2.unirAPartida("Juani",ws.codigo);
 	ws3.unirAPartida("Juan",ws.codigo);
