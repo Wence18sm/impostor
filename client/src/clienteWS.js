@@ -29,13 +29,21 @@ function ClienteWS(){
 		this.socket.emit('lanzarVotacion',this.nick,this.codigo)
 	}
 	this.saltarVoto = function(){
-		this.socket.emit('saltarVoto',this.codigo,this.nick)
+		this.socket.emit('saltarVoto',this.nick,this.codigo)
 	}
 	this.votar=function(sospechoso){
 		this.socket.emit('votar',this.nick,this.codigo,sospechoso)
 	}
 	this.obtenerEncargo = function(){
 		this.socket.emit('obtenerEncargo',this.nick,this.codigo)
+	}
+
+	this.atacar = function(atacado){
+		this.socket.emit('atacar',this.nick,this.codigo,atacado);
+	}
+
+	this.abandonarPartida = function(atacado){
+		this.socket.emit('abandonarPartida',this.nick,this.codigo);
 	}
 
 
@@ -96,6 +104,13 @@ function ClienteWS(){
 			console.log(data);
 		});
 
+		this.socket.on('atacar',function(data){
+			console.log(data.atacado+" ha sido atacado");
+		});
+		this.socket.on('abandonarPartida',function(data){
+			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
+		});
+
 	}
 	// El constructor del objeto lo llama:
 	this.ini();
@@ -114,4 +129,18 @@ function pruebasWS(){
 	ws4.unirAPartida("Juano",ws.codigo);
 
 	//ws.iniciarPartida();
+}
+
+function encargos(){
+	 ws.obtenerEncargo();
+	 ws2.obtenerEncargo();
+	 ws3.obtenerEncargo();
+	 ws4.obtenerEncargo();
+}
+
+function saltarVotos(){
+	 ws.saltarVoto();
+	 ws2.saltarVoto();
+	 ws3.saltarVoto();
+	 ws4.saltarVoto();
 }

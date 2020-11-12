@@ -13,6 +13,9 @@ function ServidorWS(){
         socket.broadcast.to(nombre).emit(mens,datos)
     };
 
+    this.enviarAUno=function(socket,mens,datos){
+        socket.emit(mens,datos);
+    }
 
 	this.lanzarSocketSrv = function(io,juego){
 		var cli=this;
@@ -92,6 +95,18 @@ function ServidorWS(){
 		    });
 		    socket.on('obtenerEncargo', function(nick,codigo) {
 		     	cli.enviarRemitente(socket,"recibirEncargo",juego.obtenerEncargo(nick,codigo));
+		    });
+
+		    socket.on('atacar', function(nick,codigo,atacado) {
+		    	var partida = juego.partidas[codigo];
+		        juego.atacar(nick,codigo,atacado);
+		     	cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
+		    });
+
+		    socket.on('abandonarPartida', function(nick,codigo) {
+		    	var partida = juego.partidas[codigo];
+		        juego.abandonarPartida(nick,codigo);
+		     	cli.enviarATodos(io,codigo,"abandonarPartida",{"nick":nick,"codigo":codigo});
 		    });
 
 

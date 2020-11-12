@@ -306,7 +306,7 @@ describe("El juego del impostor", function() {
 			expect(partida.fase.nombre).toEqual("jugando");
 		});
 
-		it("se vota y mata a un inocente",function(){
+		xit("se vota y mata a un inocente",function(){
 			var partida = juego.partidas[codigo];
 			juego.lanzarVotacion(nick,codigo);
 			partida.usuarios[nick].impostor= true;
@@ -321,8 +321,34 @@ describe("El juego del impostor", function() {
 			juego.votar("isa",codigo,"tomas");
 			expect(partida.fase.nombre).toEqual("votacion");
 			juego.votar("tomas",codigo,"isa");
-			expect(partida.usuarios["tomas"].estado.nombre).toEqual("muerto");
+			expect(partida.usuarios["tomas"].estado.nombre).toEqual("fantasma");
 			expect(partida.fase.nombre).toEqual("jugando");
+		});
+
+		it("Impostor ataca y muere un inocente",function(){
+			//iniciar la partida
+			//ajustar a mano el impostor
+			//atacar y comprobar 
+			var partida = juego.partidas[codigo];
+
+			partida.usuarios[nick].impostor= true;
+			partida.usuarios["ana"].impostor= false;
+			partida.usuarios["isa"].impostor= false;
+			partida.usuarios["tomas"].impostor= false;
+
+			expect(partida.fase.nombre).toEqual("jugando");
+
+			juego.atacar(nick,codigo,"ana");
+			//aqui muere ana
+			expect(partida.usuarios["ana"].estado.nombre).toEqual("fantasma");
+			expect(partida.fase.nombre).toEqual("jugando");
+
+			juego.atacar(nick,codigo,"isa");
+			//aqui muere ana
+			expect(partida.usuarios["isa"].estado.nombre).toEqual("fantasma");
+			expect(partida.fase.nombre).toEqual("final");
+
+
 		});
 
 
