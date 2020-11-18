@@ -99,12 +99,14 @@ function ServidorWS(){
 
 		    socket.on('atacar', function(nick,codigo,atacado) {
 		    	var partida = juego.partidas[codigo];
+		    	var fase = partida.fase.nombre;
 		        juego.atacar(nick,codigo,atacado);
 		     	cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
 		    });
 
 		    socket.on('abandonarPartida', function(nick,codigo) {
 		    	var partida = juego.partidas[codigo];
+		    	
 		        juego.abandonarPartida(nick,codigo);
 		     	cli.enviarATodos(io,codigo,"abandonarPartida",{"nick":nick,"codigo":codigo});
 		    });

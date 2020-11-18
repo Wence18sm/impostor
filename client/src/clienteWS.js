@@ -66,6 +66,9 @@ function ClienteWS(){
 			cli.codigo = data.codigo;
 			console.log("codigo partida: "+data.codigo);
 			console.log("propietario: "+data.owner);
+			 if (data.codigo!='fallo'){
+			 	cw.mostrarEsperandoRival();
+			 };
 		});
 		//Unir a partida 
 		this.socket.on('unidoAPartida',function(data){
@@ -82,6 +85,7 @@ function ClienteWS(){
 		});
 		this.socket.on('listaDePartidasDisponibles',function(lista){
 			console.log(lista);
+			cw.mostrarUnirAPartida(lista);
 		});
 		this.socket.on('listaDePartidas',function(lista){
 			console.log(lista);
