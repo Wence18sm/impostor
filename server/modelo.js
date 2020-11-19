@@ -54,12 +54,14 @@ function Juego() {
 		var listaPartidas = [];
 		var huecos = 0;
 		var num = 0;
+		var maximo;
 		for (var key in this.partidas){
 			var partida = this.partidas[key];
 			num = this.partidas[key].obtenerHuecos();
+			maximo = this.partidas[key].maximo;
 			if (num>0)
 			{
-			listaPartidas.push({"codigo":key,"huecos":num});
+			listaPartidas.push({"codigo":key,"huecos":num,"maximo":maximo});
 			}
 		}
 		return listaPartidas;

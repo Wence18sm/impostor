@@ -2,10 +2,12 @@ function ClienteWS(){
 	this.socket;
 	this.nick;
 	this.codigo;
+	this.maximo;
 
 	//crear partida
 	this.crearPartida = function(nick,numero){
 		this.nick=nick;
+		this.maximo = numero;
 		this.socket.emit("crearPartida",nick,numero);//{"nick": nick, "num": num}
 	}
 
@@ -73,8 +75,12 @@ function ClienteWS(){
 		//Unir a partida 
 		this.socket.on('unidoAPartida',function(data){
 			cli.codigo = data.codigo;
+			cli.maximo = data.maximo;
 			console.log(data);
 			console.log("El usuario: "+data.nick+" se ha unido a la partida con el codigo: "+data.codigo);
+			if (data.nick!=""){
+			 	cw.mostrarEsperandoRival();
+			 }
 		});
 		this.socket.on('nuevoJugador',function(data){
 			console.log(data.nick+" se une a la partida");

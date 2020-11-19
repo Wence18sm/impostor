@@ -10,7 +10,7 @@ function ControlWeb($){
 	cadena = cadena + '</div>';
 	cadena = cadena +'<div class="form-group">';
 	cadena = cadena +'<label for="pwd">Numero:</label>';
-	cadena = cadena +'<input type="text" class="form-control" id="num">';
+	cadena = cadena +'<input type="number" class="form-control" id="num" min="4" max="10">';
 	cadena = cadena +'</div>';
 
 	cadena = cadena +'<button type="button" id="btnCrearPartida" class="btn btn-primary">Crear Partida</button>';
@@ -40,25 +40,33 @@ function ControlWeb($){
 		$('#mostrarER').remove();
 		var cadena = '<div id="mostrarER">';
 		cadena = cadena + '<img src="client/img/images.jpg">';
+
+		cadena = cadena +'<button type="button" id="btnIniciarP" class="btn btn-primary">Iniciar partida</button>';
+
 		cadena = cadena +'</div>';
 
 		$('#esperando').append(cadena);
+
+		$('#mostrarUP').remove();
+
 
 	}
 
 	this.mostrarUnirAPartida = function(lista){
 
+		$('#mostrarUP').remove();
 		var cadena = '<div id="mostrarUP">';
 		cadena = cadena +'<div class="list-group">';
 
 		for (var i=0; i<lista.length;i++){
-  			cadena = cadena + '<a href="#" value ="'+lista[i].codigo+'" class="list-group-item">'+'Codigo:'+lista[i].codigo+'--- Huecos:'+lista[i].huecos+'</a>';
+  			cadena = cadena + '<a href="#" value ="'+lista[i].codigo+'" class="list-group-item">'+'Codigo:'+lista[i].codigo+'<span class="badge">'+'Huecos:'+lista[i].huecos+' de '+lista[i].maximo+'</span></a>';
   		}
-		cadena = cadena +'</div>';
 		cadena = cadena +'</div>';
 
 
 		cadena = cadena +'<button type="button" id="btnUnirAPartida" class="btn btn-primary">Unir a partida</button>';
+
+		cadena = cadena +'</div>';
 
 		$('#unirAPartida').append(cadena);
 
@@ -71,11 +79,18 @@ function ControlWeb($){
 		$('#btnUnirAPartida').on('click',function(){
 			var nick= $('#nick').val();
 			var codigo = StoreValue[0];
-			$('#mostrarUP').remove();//borrarlom todo
+			$('#mostrarUP').remove();
+			$('#mostrarCP').remove();
+			//borrarlom todo
 			//controlar que no le mandemos un nick vacio
 			ws.unirAPartida(nick,codigo);
-		
-	})
+		})
+	}
+
+	this.limpiar = function(){
+		$('#mostrarUP').remove();
+		$('#mostrarCP').remove();
+		$('#mostrarER').remove();
 	}
 
 }

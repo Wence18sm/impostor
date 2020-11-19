@@ -32,9 +32,10 @@ function ServidorWS(){
 		        //nick nulo o cadena vacia
 				var res=juego.unirAPartida(codigo,nick);
 				socket.join(codigo);
+				var maximo = juego.partidas[codigo].maximo;
 				//var owner = juego.partidas[codigo].nickOwner;
 				console.log('usuario nick: '+nick+" se une a la partida con el codigo: "+codigo);        				
-		       	cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick});
+		       	cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick,"maximo":maximo});
 		       	cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",{"nick":nick})		        		        
 		    });
 		    socket.on('iniciarPartida', function(nick,codigo) {
