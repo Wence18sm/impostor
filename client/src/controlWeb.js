@@ -49,6 +49,22 @@ function ControlWeb($){
 
 		$('#mostrarUP').remove();
 
+		var StoreValue = [];
+    	$(".list-group a").click(function(){
+        	StoreValue = []; 
+       		StoreValue.push($(this).attr("value")); // add text to array
+    	});
+
+		$('#btnIniciarP').on('click',function(){
+		//var nick= $('#nick').val();
+		//var codigo = StoreValue[0];
+		$('#mostrarER').remove();//borrarlom todo
+		//controlar que no le mandemos un nick vacio
+		ws.iniciarPartida();
+		//mostrar Esperando rival
+
+	})
+
 
 	}
 
