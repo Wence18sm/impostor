@@ -39,21 +39,35 @@ function ControlWeb($){
 	this.mostrarEsperandoRival = function(){
 		$('#mostrarER').remove();
 		var cadena = '<div id="mostrarER">';
-		cadena = cadena + '<img src="client/img/images.jpg">';
 
-		cadena = cadena +'<button type="button" id="btnIniciarP" class="btn btn-primary">Iniciar partida</button>';
-
+		cadena = cadena +'<div class="row">';
+			cadena = cadena +'<div class="col-md-4"></div>';
+			cadena = cadena +'<div class="col-md-3">';
+			cadena = cadena + '<img src="client/img/0_cWpsf9D3g346Va20.jpg">';
+			cadena = cadena +'</div>';
+			cadena = cadena +'<div class="col-md-5"></div>';// aqui dentro ira la lista de jugadores 
 		cadena = cadena +'</div>';
+
+		cadena = cadena +'<div class="row">';
+		cadena = cadena +'<div class="col-md-5"></div>';
+		cadena = cadena +'<div class="col-md-3">Si eres el creador puedes iniciar la partida</div>';
+		cadena = cadena +'<div class="col-md-4"></div>';
+		cadena = cadena +'</div>';
+
+		cadena = cadena +'<div class="row">';
+			cadena = cadena +'<div class="col-md-4"></div>';
+			cadena = cadena +'<div class="col-md-4">';		
+			cadena = cadena +'<button type="button" id="btnIniciarP" class="btn btn-primary btn-block">Iniciar partida</button>';
+			cadena = cadena + '</div>';
+			cadena = cadena +'<div class="col-md-4"></div>';
+		cadena = cadena +'</div>';
+
+		cadena = cadena +'</div>';// div de todo
+		
 
 		$('#esperando').append(cadena);
 
 		$('#mostrarUP').remove();
-
-		var StoreValue = [];
-    	$(".list-group a").click(function(){
-        	StoreValue = []; 
-       		StoreValue.push($(this).attr("value")); // add text to array
-    	});
 
 		$('#btnIniciarP').on('click',function(){
 		//var nick= $('#nick').val();
