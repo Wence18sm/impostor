@@ -45,8 +45,11 @@ function ServidorWS(){
 		        //cli.enviarATodos(socket,codigo,"partidaIniciada",{"nick":nick})
 		        juego.iniciarPartida(nick,codigo);
 		        var fase = juego.partidas[codigo].fase.nombre;
-		        cli.enviarATodos(io,codigo,"partidaIniciada",fase);	
-						        		        
+		        if (fase == "jugando"){
+		        	cli.enviarATodos(io,codigo,"partidaIniciada",fase);	
+		        }else{
+		        	cli.enviarATodos(io,codigo,"esperando",fase);
+		        }		        		        
 		    });
 
 		    socket.on('listaDePartidasDisponibles', function() {

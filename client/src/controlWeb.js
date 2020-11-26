@@ -59,7 +59,7 @@ function ControlWeb($){
 		cadena = cadena +' <h3>Sala de espera</h3>';
 			cadena = cadena +'<div class="col-md-4"></div>';
 			cadena = cadena +'<div class="col-md-4">';
-				cadena = cadena +'<div>Paciencia el juego comenzara en breves..., preparate para la PELEA</div>'
+				cadena = cadena +'<div>Paciencia el juego comenzará en breves... preparate para la PELEA</div>'
 				cadena = cadena + '<img src="client/img/0_cWpsf9D3g346Va20.jpg">';
 			cadena = cadena +'</div>';
 			cadena = cadena +'<div class="col-md-4"></div>';// aqui dentro ira la lista de jugadores 

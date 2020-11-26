@@ -80,14 +80,22 @@ function ClienteWS(){
 			console.log("El usuario: "+data.nick+" se ha unido a la partida con el codigo: "+data.codigo);
 			if (data.nick!=""){
 			 	cw.mostrarEsperandoRival();
-			 }
+			}
 		});
 		this.socket.on('nuevoJugador',function(data){
 			console.log(data.nick+" se une a la partida");
 			//cli.iniciarPartida();//absurdo paco
 		});
+
+		this.socket.on('esperando',function(){
+			console.log('Esperando a comenzar, se encuentra en la fase: '+fase);
+		})
+
 		this.socket.on('partidaIniciada',function(fase){
 			console.log("La partida esta en fase: "+fase);
+			cli.obtenerEncargo();
+			cw.limpiar();
+			lanzarJuego();
 		});
 		this.socket.on('listaDePartidasDisponibles',function(lista){
 			console.log(lista);

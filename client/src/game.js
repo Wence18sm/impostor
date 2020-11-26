@@ -4,6 +4,11 @@
  *  - Tuxemon, https://github.com/Tuxemon/Tuxemon
  */
 
+function lanzarJuego (){
+  cw.limpiar();
+  game = new Phaser.Game(config);
+}
+
 const config = {
   type: Phaser.AUTO,
   width: 800,
@@ -23,9 +28,12 @@ const config = {
   }
 };
 
-const game = new Phaser.Game(config);
+//const game = new Phaser.Game(config);
 let cursors;
 let player;
+let jugadores;
+let recursos[{"nombre":"ana",frame:0},{"nombre":"pepe",frame:3}]; // ir poniendo uno a uno los frame donde empiezan y el nombre
+let game;
 let showDebug = false;
 
 function preload() {
@@ -39,6 +47,7 @@ function preload() {
   //  https://labs.phaser.io/view.html?src=src/animation/single%20sprite%20sheet.js
   //this.load.atlas("atlas", "client/assets/atlas/atlas.png", "client/assets/atlas/atlas.json");
   this.load.spritesheet("gabe","client/assets/images/ch003.png",{frameWidth:32,frameHeight:32});
+  //this.load.spritesheet("varios","client/assets/images/bonus1_full.png",{frameWidth:32,frameHeight:32});
   // repetir esto por cada personaje diferente  o usar una hoja con 10 caracteres diferentes.
 
 }
@@ -74,6 +83,7 @@ function create() {
   //   .setOffset(0, 24);
 
   player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y,"gabe");
+  //player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[0].frame);
 
   // Watch the player and worldLayer for collisions, for the duration of the scene:
   this.physics.add.collider(player, worldLayer);
@@ -126,10 +136,11 @@ function create() {
   //   repeat: -1
   // });
 
+  let nombre = recursos[0].nombre;
   const anims = this.anims;
       anims.create({
-        key: "gabe-left-walk",
-        frames: anims.generateFrameNames("gabe", {
+        key: "gabe-left-walk", //key: nombre+"left-walk",
+        frames: anims.generateFrameNames("gabe", {//aqui iria varios
           //prefix: "misa-left-walk.",
           start: 8,
           end: 11,
