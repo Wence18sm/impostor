@@ -3,6 +3,7 @@ function ClienteWS(){
 	this.nick;
 	this.codigo;
 	this.maximo;
+	this.numJugador;
 
 	//crear partida
 	this.crearPartida = function(nick,numero){
@@ -40,12 +41,20 @@ function ClienteWS(){
 		this.socket.emit('obtenerEncargo',this.nick,this.codigo)
 	}
 
+	this.estoyDentro = function(){
+		this.socket.emit('estoyDentro',this.nick,this.codigo)
+	}
+
 	this.atacar = function(atacado){
 		this.socket.emit('atacar',this.nick,this.codigo,atacado);
 	}
 
 	this.abandonarPartida = function(atacado){
 		this.socket.emit('abandonarPartida',this.nick,this.codigo);
+	}
+
+	this.movimiento = function(direccion){
+		this.socket.emit('movimiento',this.nick,this.codigo,this.numJugador,direccion);
 	}
 
 
@@ -69,6 +78,7 @@ function ClienteWS(){
 			console.log("codigo partida: "+data.codigo);
 			console.log("propietario: "+data.owner);
 			 if (data.codigo!='fallo'){
+			 	cli.numJugador=0;
 			 	cw.mostrarEsperandoRival();
 			 };
 		});
@@ -76,6 +86,7 @@ function ClienteWS(){
 		this.socket.on('unidoAPartida',function(data){
 			cli.codigo = data.codigo;
 			cli.maximo = data.maximo;
+			cli.numJugador=data.numJugador;
 			console.log(data);
 			console.log("El usuario: "+data.nick+" se ha unido a la partida con el codigo: "+data.codigo);
 			if (data.nick!=""){
@@ -99,7 +110,10 @@ function ClienteWS(){
 		});
 		this.socket.on('listaDePartidasDisponibles',function(lista){
 			console.log(lista);
-			cw.mostrarUnirAPartida(lista);
+			if(!cli.codigo){
+				cw.mostrarUnirAPartida(lista);
+			}
+			
 		});
 		this.socket.on('listaDePartidas',function(lista){
 			console.log(lista);
@@ -125,8 +139,20 @@ function ClienteWS(){
 		this.socket.on('atacar',function(data){
 			console.log(data.atacado+" ha sido atacado");
 		});
+
+		this.socket.on('dibujarRemoto',function(lista){
+			console.log(lista);
+			for(var i=0;i<lista.length;i++){
+				lanzarJugadorRemoto(lista[i].nick,lista[i].numJugador);
+			}
+		});
 		this.socket.on('abandonarPartida',function(data){
 			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
+		});
+
+		this.socket.on('moverRemoto',function(data){
+			console.log(datos);
+			moverRemoto(datos.direccion,datos.nick.datos.numJugador);
 		});
 
 	}

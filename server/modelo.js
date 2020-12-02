@@ -122,6 +122,10 @@ function Juego() {
 		usr.abandonarPartida();
 	}
 
+	this.obtenerListaJugadores=function(codigo){
+		return this.partidas[codigo].obtenerListaJugadores();
+	}
+
 }
 //////////////////////////////
 //// PARTIDA
@@ -146,6 +150,16 @@ function Partida(num,owner,codigo,juego){
 		return huecos;
 	}
 
+	this.obtenerListaJugadores=function(){
+		var lista =[];
+
+		for (var key in this.usuarios){
+			var numero = this.usuarios[key].numJugador;
+			lista.push({nick:key,numJugador:numero});
+		}
+		return lista;
+	}
+
 
 	//// Agregar usuario
 	this.agregarUsuario = function(nick){
@@ -159,6 +173,7 @@ function Partida(num,owner,codigo,juego){
 		//comprobar si el usuario n (el tope) el maximo
 		let nuevo= nick;
 		let cont = 1;
+		let numero;
 		//comprobamos que no supera el maximo de usuarios
 	
 		while(this.usuarios[nuevo]){
@@ -167,8 +182,11 @@ function Partida(num,owner,codigo,juego){
 		}
 		this.usuarios[nuevo] = new Usuario(nuevo);
 		this.usuarios[nuevo].partida = this;
+		//this.usuarios[nuevo].numJugador = this.numJugadores()-1;
+		numero = this.numJugadores()-1;
 
 		//this.comprobarMinimo();
+		return{"codigo":this.codigo,"nick":nuevo,"numJugador":numero};
 	}
 	////////////////////////
 	// Comprobaciones
@@ -453,6 +471,7 @@ function Usuario(nick,juego){
 	this.partida
 	this.impostor = false;
 	this.encargo = " ";
+	this.numJugador;
 
 	this.estado = new Vivo();
 
