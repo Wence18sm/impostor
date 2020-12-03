@@ -173,7 +173,6 @@ function Partida(num,owner,codigo,juego){
 		//comprobar si el usuario n (el tope) el maximo
 		let nuevo= nick;
 		let cont = 1;
-		let numero;
 		//comprobamos que no supera el maximo de usuarios
 	
 		while(this.usuarios[nuevo]){
@@ -183,8 +182,11 @@ function Partida(num,owner,codigo,juego){
 		this.usuarios[nuevo] = new Usuario(nuevo);
 		this.usuarios[nuevo].partida = this;
 		//this.usuarios[nuevo].numJugador = this.numJugadores()-1;
-		numero = this.numJugadores()-1;
-
+		var numero=this.numJugadores()-1;
+		this.usuarios[nuevo].numJugador=numero;
+		if (this.comprobarMinimo()){
+			this.fase=new Completado();
+		};
 		//this.comprobarMinimo();
 		return{"codigo":this.codigo,"nick":nuevo,"numJugador":numero};
 	}

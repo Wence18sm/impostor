@@ -3,7 +3,7 @@ function ClienteWS(){
 	this.nick;
 	this.codigo;
 	this.maximo;
-	this.numJugador;
+	this.numJugador=undefined;
 
 	//crear partida
 	this.crearPartida = function(nick,numero){
@@ -53,8 +53,8 @@ function ClienteWS(){
 		this.socket.emit('abandonarPartida',this.nick,this.codigo);
 	}
 
-	this.movimiento = function(direccion){
-		this.socket.emit('movimiento',this.nick,this.codigo,this.numJugador,direccion);
+	this.movimiento = function(x,y){
+		this.socket.emit('movimiento',this.nick,this.codigo,this.numJugador,x,y);
 	}
 
 
@@ -143,16 +143,18 @@ function ClienteWS(){
 		this.socket.on('dibujarRemoto',function(lista){
 			console.log(lista);
 			for(var i=0;i<lista.length;i++){
-				lanzarJugadorRemoto(lista[i].nick,lista[i].numJugador);
+				if (lista[i].nick!=cli.nick){
+					lanzarJugadorRemoto(lista[i].nick,lista[i].numJugador);
+				}
 			}
 		});
 		this.socket.on('abandonarPartida',function(data){
 			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
 		});
 
-		this.socket.on('moverRemoto',function(data){
+		this.socket.on('moverRemoto',function(datos){
 			console.log(datos);
-			moverRemoto(datos.direccion,datos.nick.datos.numJugador);
+			mover(datos.nick,datos.x,datos.y);
 		});
 
 	}

@@ -44,7 +44,9 @@ function ServidorWS(){
 				//var owner = juego.partidas[codigo].nickOwner;
 				console.log('usuario nick: '+nick+" se une a la partida con el codigo: "+codigo);        				
 		       	cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick,"maximo":maximo});
-		       	cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",{"nick":nick})		        		        
+		       	//cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",{"nick":nick});
+		       	var lista=juego.obtenerListaJugadores(codigo);
+		    	cli.enviarATodos(io, codigo,"nuevoJugador",lista);		        		        
 		    });
 		    socket.on('iniciarPartida', function(nick,codigo) {
 		        //Para pensar muy concienzudamente
@@ -128,21 +130,17 @@ function ServidorWS(){
 		    	// var numero = juego.partidas[codigo].usuarios[nick].numJugador;
 		    	// var datos = {nick:nick,numJugador:usr.numJugador};
 		    	// cli.enviarATodosMenosRemitente(socket,codigo,"dibujarRemoto",datos)
-		    	var lista = obtenerListaJugadores(codigo);
+		    	var lista = juego.obtenerListaJugadores(codigo);
 		    	cli.enviarRemitente(socket,"dibujarRemoto",lista);
 		    });
 
-		    socket.on('movimiento', function(nick,codigo,numJugador,direccion) {
+		    socket.on('movimiento', function(nick,codigo,numJugador,x,y) {
 
-		    	var datos = {nick:nick,numJugador:numJugador,direccion:direccion};
+		    	var datos = {nick:nick,numJugador:numJugador,x:x,y:y};
 
 		    	cli.enviarATodosMenosRemitente(socket,codigo,"moverRemoto",datos)
 		    	
 		    });
-
-
-
-
 
 		});
 	};

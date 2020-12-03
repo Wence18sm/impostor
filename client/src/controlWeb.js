@@ -22,7 +22,7 @@ function ControlWeb($){
 	cadena = cadena +'<div class="row">';
 		cadena = cadena +'<div class="col-md-3"></div>';
 		cadena = cadena +'<div class="col-md-6">';
-			cadena = cadena +'<input type="number" class="form-control" id="num" min="4" max="10">';
+			cadena = cadena +'<input type="number" class="form-control" id="num" min="4" max="10" value="4">';
 		cadena = cadena + '</div>';
 		cadena = cadena +'<div class="col-md-3"></div>';
 	cadena = cadena + '</div>';
