@@ -53,8 +53,8 @@ function ClienteWS(){
 		this.socket.emit('abandonarPartida',this.nick,this.codigo);
 	}
 
-	this.movimiento = function(x,y){
-		this.socket.emit('movimiento',this.nick,this.codigo,this.numJugador,x,y);
+	this.movimiento=function(direccion,x,y){
+	this.socket.emit("movimiento",this.nick,this.codigo,this.numJugador,direccion,x,y);
 	}
 
 
@@ -93,8 +93,9 @@ function ClienteWS(){
 			 	cw.mostrarEsperandoRival();
 			}
 		});
-		this.socket.on('nuevoJugador',function(data){
-			console.log(data.nick+" se une a la partida");
+		this.socket.on('nuevoJugador',function(lista){
+			//console.log(lista.nick+" se une a la partida");
+			cw.mostrarListaJugadores(lista);
 			//cli.iniciarPartida();//absurdo paco
 		});
 
@@ -152,9 +153,8 @@ function ClienteWS(){
 			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
 		});
 
-		this.socket.on('moverRemoto',function(datos){
-			console.log(datos);
-			mover(datos.nick,datos.x,datos.y);
+		this.socket.on("moverRemoto",function(datos){
+			mover(datos.direccion,datos.nick,datos.numJugador,datos.x,datos.y);
 		});
 
 	}
