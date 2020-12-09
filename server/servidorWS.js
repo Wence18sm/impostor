@@ -117,7 +117,8 @@ function ServidorWS(){
 		    	var partida = juego.partidas[codigo];
 		    	var fase = partida.fase.nombre;
 		        juego.atacar(nick,codigo,atacado);
-		     	cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
+		     	//cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
+		     	cli.enviarATodos(io,codigo,"muereInocente",atacado);
 		    });
 
 		    socket.on('abandonarPartida', function(nick,codigo) {

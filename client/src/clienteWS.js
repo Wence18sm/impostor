@@ -3,6 +3,7 @@ function ClienteWS(){
 	this.nick;
 	this.codigo;
 	this.maximo;
+	this.impostor=false;
 	this.numJugador=undefined;
 
 	//crear partida
@@ -136,6 +137,11 @@ function ClienteWS(){
 		});
 		this.socket.on('recibirEncargo',function(data){
 			console.log(data);
+			cli.impostor=data.impostor;
+			if(data.impostor){
+				$('#avisarImpostor').modal("show");
+				crearColision();
+			}
 		});
 
 		this.socket.on('atacar',function(data){
@@ -156,6 +162,9 @@ function ClienteWS(){
 
 		this.socket.on("moverRemoto",function(datos){
 			mover(datos);
+		});
+		this.socket.on("muereInocente",function(atacado){
+			console.log(atacado+" ha sido atacado");
 		});
 
 	}

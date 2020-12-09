@@ -39,6 +39,7 @@ function lanzarJuego(){
   var worldLayer;
   let map;
   var crear;
+  var remotos;
   var spawnPoint;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"}];
 
@@ -322,9 +323,26 @@ function lanzarJuego(){
     // camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     cursors = crear.input.keyboard.createCursorKeys();
-   
+    remotos = crear.add.group();
+    teclaA=crear.input.keyboard.addKey('a');
+
+
     lanzarJugador(ws.numJugador);
     ws.estoyDentro();
+  }
+
+  function crearColision(){
+    if(ws.impostor && crear){
+      crear.physics.add.overlap(player,remotos,kill);
+    }
+  }
+  function kill(sprite,inocente){
+    //dibujar el sprite inocente muerto
+    //avisar al servidor del ataque
+    var nick = inocente.nick;
+    if(teclaA.isDown){
+      ws.atacar(nick);
+    }
   }
 
   function lanzarJugador(numJugador){
@@ -341,6 +359,9 @@ function lanzarJuego(){
     var frame=recursos[numJugador].frame;
     jugadores[nick]=crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",frame);   
     crear.physics.add.collider(jugadores[nick], worldLayer);
+
+    remotos.add(jugadores[nick]);
+    jugadores[nick].nick=nick;
   }
 
 
