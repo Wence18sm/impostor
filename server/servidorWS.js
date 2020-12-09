@@ -136,11 +136,11 @@ function ServidorWS(){
 		    	cli.enviarRemitente(socket,"dibujarRemoto",lista);
 		    });
 
-		    socket.on('movimiento', function(nick,codigo,numJugador,direccion,x,y) {
+		    socket.on('movimiento', function(datos) {
 
-		    	var datos = {"nick":nick,"numJugador":numJugador,"direccion":direccion,"x":x,"y":y};
+		    	//var datos = {nick:nick,numJugador:numJugador,direccion:direccion,x:x,y:y};
 
-		    	cli.enviarATodosMenosRemitente(socket,codigo,"moverRemoto",datos)
+		    	cli.enviarATodosMenosRemitente(socket,datos.codigo,"moverRemoto",datos)
 		    	
 		    });
 

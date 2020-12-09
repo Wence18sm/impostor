@@ -52,6 +52,8 @@ function lanzarJuego(){
     // If you don't use an atlas, you can do the same thing with a spritesheet, see:
     //  https://labs.phaser.io/view.html?src=src/animation/single%20sprite%20sheet.js
     //this.load.atlas("atlas", "cliente/assets/atlas/atlas.png", "cliente/assets/atlas/atlas.json");
+
+    //Sprites
     //this.load.spritesheet("gabe","cliente/assets/images/gabe.png",{frameWidth:24,frameHeight:24});
     //this.load.spritesheet("gabe","cliente/assets/images/male01-2.png",{frameWidth:32,frameHeight:32});
     this.load.spritesheet("varios","client/assets/images/final2.png",{frameWidth:24,frameHeight:32});
@@ -337,7 +339,7 @@ function lanzarJuego(){
 
   function lanzarJugadorRemoto(nick,numJugador){
     var frame=recursos[numJugador].frame;
-    jugadores[nick]=crear.physics.add.sprite(spawnPoint.x+15*numJugador, spawnPoint.y,"varios",frame);   
+    jugadores[nick]=crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",frame);   
     crear.physics.add.collider(jugadores[nick], worldLayer);
   }
 
@@ -351,42 +353,48 @@ function lanzarJuego(){
     
 
   // }
-  function mover(direccion,nick,numJugador,x,y)
+  function mover(datos)
   {
+    var direccion = datos.direccion;
+    var nick = datos.nick;
+    var numJugador = datos.numJugador;
+    var x = datos.x;
+    var y = datos.y;
+
     var remoto=jugadores[nick];
     const speed = 175;
-    const prevVelocity = player.body.velocity.clone();
+    //const prevVelocity = player.body.velocity.clone();
     const nombre=recursos[numJugador].sprite;
    if (remoto)
   {
-    remoto.body.setVelocity(0);
-    remoto.setX(x);
-    remoto.setY(y);
-    remoto.body.velocity.normalize().scale(speed);
-    if (direccion=="left") {
-      remoto.anims.play(nombre+"-left-walk", true);
-    } else if (direccion=="right") {
-      remoto.anims.play(nombre+"-right-walk", true);
-    } else if (direccion=="up") {
-      remoto.anims.play(nombre+"-back-walk", true);
-    } else if (direccion=="down") {
-      remoto.anims.play(nombre+"-front-walk", true);
-    } else {
-      remoto.anims.stop();
-    }
+      remoto.body.setVelocity(0);
+      remoto.setX(x);
+      remoto.setY(y);
+      remoto.body.velocity.normalize().scale(speed);
+      if (direccion=="left") {
+        remoto.anims.play(nombre+"-left-walk", true);
+      } else if (direccion=="right") {
+        remoto.anims.play(nombre+"-right-walk", true);
+      } else if (direccion=="up") {
+        remoto.anims.play(nombre+"-back-walk", true);
+      } else if (direccion=="down") {
+        remoto.anims.play(nombre+"-front-walk", true);
+      } else {
+        remoto.anims.stop();
+      }
   }
   }
 
 
-  function moverRemoto(direccion,nick,numJugador)
-  {
-    const speed = 175;
-    var remoto=jugadores[nick];
+  // function moverRemoto(direccion,nick,numJugador)
+  // {
+  //   const speed = 175;
+  //   var remoto=jugadores[nick];
 
-    if (direccion=="left"){
-      remoto.body.setVelocityX(-speed);
-    }
-  }
+  //   if (direccion=="left"){
+  //     remoto.body.setVelocityX(-speed);
+  //   }
+  // }
 
   function update(time, delta) {
     const speed = 175;
@@ -399,7 +407,7 @@ function lanzarJuego(){
     player.body.setVelocity(0);
     //player2.body.setVelocity(0);
 
-
+    
     // Horizontal movement
     if (cursors.left.isDown) {
       player.body.setVelocityX(-speed);
@@ -407,7 +415,7 @@ function lanzarJuego(){
     } else if (cursors.right.isDown) {
       player.body.setVelocityX(speed);
       direccion="right";
-
+    }
     // Vertical movement
     if (cursors.up.isDown) {
       player.body.setVelocityY(-speed);
@@ -420,7 +428,8 @@ function lanzarJuego(){
     player.body.velocity.normalize().scale(speed);
 
     ws.movimiento(direccion,player.body.x,player.body.y);
-    // Update the animation last and give left/right animations precedence over up/down animations
+
+    //Update the animation last and give left/right animations precedence over up/down animations
     if (cursors.left.isDown) {
       player.anims.play(nombre+"-left-walk", true);
     } else if (cursors.right.isDown) {
@@ -431,6 +440,7 @@ function lanzarJuego(){
       player.anims.play(nombre+"-front-walk", true);
     } else {
       player.anims.stop();
+    }
 
 
       // If we were moving, pick and idle frame to use
@@ -438,6 +448,6 @@ function lanzarJuego(){
       // else if (prevVelocity.x > 0) player.setTexture("gabe", "gabe-right-walk");
       // else if (prevVelocity.y < 0) player.setTexture("gabe", "gabe-back-walk");
       // else if (prevVelocity.y > 0) player.setTexture("gabe", "gabe-front-walk");
-    }
-  }
+    //}
+  //}
   }
