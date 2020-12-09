@@ -26,11 +26,11 @@ function Juego() {
 		//this.partidas[codigo] = nueva partida
 	}
 	this.unirAPartida = function(codigoPartida,nick){
-		//var res = -1;
+		var res = -1;
 		if (this.partidas[codigoPartida]){
-			this.partidas[codigoPartida].agregarUsuario(nick);
+			res = this.partidas[codigoPartida].agregarUsuario(nick);
 		}
-		//return res;
+		return res;
 		
 
 	}
@@ -163,7 +163,7 @@ function Partida(num,owner,codigo,juego){
 
 	//// Agregar usuario
 	this.agregarUsuario = function(nick){
-			this.fase.agregarUsuario(nick,this);
+			return this.fase.agregarUsuario(nick,this);
 	}
 
 
@@ -539,7 +539,7 @@ function Inicial(){
 
 	//agregar usuario al inicio
 	this.agregarUsuario = function(nick,partida){
-		partida.puedeAgregarUsuario(nick);
+		return partida.puedeAgregarUsuario(nick);
 
 		if (partida.comprobarMinimo()){
 			partida.fase = new Completado();

@@ -42,8 +42,10 @@ function ServidorWS(){
 				socket.join(codigo);
 				var maximo = juego.partidas[codigo].maximo;
 				//var owner = juego.partidas[codigo].nickOwner;
-				console.log('usuario nick: '+nick+" se une a la partida con el codigo: "+codigo);        				
-		       	cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick,"maximo":maximo});
+				console.log('usuario nick: '+nick+" se une a la partida con el codigo: "+codigo);
+
+		       	//cli.enviarRemitente(socket,"unidoAPartida",{"codigo":codigo,"nick":nick,"maximo":maximo});
+		       	cli.enviarRemitente(socket,"unidoAPartida",res);
 		       	//cli.enviarATodosMenosRemitente(socket,codigo,"nuevoJugador",{"nick":nick});
 		       	var lista=juego.obtenerListaJugadores(codigo);
 		    	cli.enviarATodos(io, codigo,"nuevoJugador",lista);		        		        
