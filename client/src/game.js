@@ -448,7 +448,7 @@ function lanzarJuego(){
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
 
-    ws.movimiento(direccion,player.body.x,player.body.y);
+    ws.movimiento(direccion,player.x,player.y);
 
     //Update the animation last and give left/right animations precedence over up/down animations
     if (cursors.left.isDown) {
