@@ -12,8 +12,8 @@ function lanzarJuego(){
 
   const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 500,
+    height: 400,
     parent: "game-container",
     pixelArt: true,
     physics: {
@@ -37,9 +37,11 @@ function lanzarJuego(){
   let showDebug = false;
   let camera;
   var worldLayer;
+  var capaTareas;
   let map;
   var crear;
   var remotos;
+  var muertos;
   var spawnPoint;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"}];
 
@@ -71,9 +73,11 @@ function lanzarJuego(){
     // Parameters: layer name (or index) from Tiled, tileset, x, y
     const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
     worldLayer = map.createStaticLayer("World", tileset, 0, 0);
+    capaTareas = map.createStaticLayer("CapaTareas", tileset, 0, 0);
     const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
 
     worldLayer.setCollisionByProperty({ collides: true });
+    capaTareas.setCollisionByProperty({ collides: true });
 
     // By default, everything gets depth sorted on the screen in the order we created things. Here, we
     // want the "Above Player" layer to sit on top of the player, so we explicitly give it a depth.
@@ -324,10 +328,12 @@ function lanzarJuego(){
 
     cursors = crear.input.keyboard.createCursorKeys();
     remotos = crear.add.group();
+     muertos= crear.add.group();
     teclaA=crear.input.keyboard.addKey('a');
+    teclaV=crear.input.keyboard.addKey('v');
+    teclaT=crear.input.keyboard.addKey('t');
 
-
-    lanzarJugador(ws.numJugador);
+    lanzarJugador(ws.nick,ws.numJugador);
     ws.estoyDentro();
   }
 
@@ -345,11 +351,56 @@ function lanzarJuego(){
     }
   }
 
-  function lanzarJugador(numJugador){
+  function dibujarMuereInocente(inocente){
+    //añadir un sprite en la posicion del inocente
+    //meter el sprite en un grupo de muertos(para gestionar la colision y poder lanzar la votacion)
+    //crear la funcion que gestiona la colision de los vivos con los muertos.
+    var x=jugadores[inocente].x;
+    var y = jugadores[inocente].y;
+    var numJugador= jugadores[inocente].numJugador;
+
+    var muerto = crear.physics.add.sprite(x,y,"varios",recursos[numJugador].frame); 
+
+    muertos.add(muerto);
+
+    crear.physics.add.overlap(player,muertos,votacion);
+  }
+
+  function votacion(sprite,muerto){
+    //comprobar si e jugador local si pulsa la tecla de votacion por ejemplo la v
+    //en ese caso, llamamos al servidor para lanzar la votacion
+
+    if(teclaV.isDown){
+      ws.lanzarVotacion();
+    }
+  }
+
+  function tareas(sprite,objeto){
+    //ver si el sprite local puede realizar la tarea
+    //en tal caso, dibujar el modal de la tarea permitiendo realizarla
+    //dibujar la tarea
+    // cuando tenga los atributos en el tiled map -- ese if
+    //objeto.nombre="jardines";
+    if(ws.encargo==objeto.properties.tarea && teclaT.isDown){
+    //if(ws.encargos==tareas.nombre){
+       //console.log("Reaizar tarea"+ws.encargo);
+       ws.realizarTarea();
+       //ws.realizarTarea();
+    }
+    //console.log("Realizar tarea");
+  }
+
+  function lanzarJugador(nick,numJugador){
+    //var x =spawnPoint.x*numJugador*4+2;
     player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
     // Watch the player and worldLayer for collisions, for the duration of the scene:
     crear.physics.add.collider(player, worldLayer);
+    crear.physics.add.collider(player, capaTareas,tareas);
     //crear.physics.add.collider(player2, worldLayer);
+    jugadores[nick]=player;
+    jugadores[nick].nick=nick;
+    jugadores[nick].numJugador=numJugador;
+
     camera = crear.cameras.main;
     camera.startFollow(player);
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -357,11 +408,13 @@ function lanzarJuego(){
 
   function lanzarJugadorRemoto(nick,numJugador){
     var frame=recursos[numJugador].frame;
+    //var x =spawnPoint.x*numJugador*4+2;
     jugadores[nick]=crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",frame);   
     crear.physics.add.collider(jugadores[nick], worldLayer);
-
-    remotos.add(jugadores[nick]);
     jugadores[nick].nick=nick;
+    jugadores[nick].numJugador=numJugador;
+    remotos.add(jugadores[nick]);
+    
   }
 
 

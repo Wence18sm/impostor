@@ -11,7 +11,7 @@ describe("El juego del impostor", function() {
   var nick;
 
   beforeEach(function() {
-  	juego=new modelo.Juego();
+  	juego=new modelo.Juego(4);
   	//usr=new modelo.Usuario("Pepe",juego);
   	nick = "Pepe"
   });
@@ -351,8 +351,26 @@ describe("El juego del impostor", function() {
 
 		});
 
+		it("Realizar Tareas",function(){
+			//iniciar la partida
+			//ajustar a mano el impostor
+			//atacar y comprobar 
+			var partida = juego.partidas[codigo];
 
-	})
+			for (var i=0;i<9;i++){
+				for(var key in partida.usuarios){
+					partida.usuarios[key].realizarTarea();
+				}
+
+			expect(partida.fase.nombre).toEqual("jugando");
+			}
+			for(var key in partida.usuarios){
+					partida.usuarios[key].realizarTarea();
+				}
+			expect(partida.fase.nombre).toEqual("final");
+
+		});
 
 	});
+});
 })

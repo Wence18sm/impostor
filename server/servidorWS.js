@@ -145,6 +145,19 @@ function ServidorWS(){
 		    	
 		    });
 
+		     socket.on('realizarTarea', function(nick,codigo) {
+		     	var partida =juego.partidas[codigo];
+		     	juego.realizarTarea(nick,codigo);
+		    	var fase=partida.fase.nombre;
+		    	var porcentajeT = juego.partidas[codigo].obtenerPorcentajeTarea(nick);
+		    	cli.enviarRemitente(socket,"tareaRealizada",porcentajeT);
+			    if (fase=="final"){
+			    	cli.enviarATodos(io, codigo, "final","ganan impostores");
+			    }
+			
+		    	
+		    });
+
 		});
 	};
 

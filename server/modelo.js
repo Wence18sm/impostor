@@ -3,11 +3,12 @@
 ////////////////////
 // JUEGO
 ///////////////////
-function Juego() {
+function Juego(min) {
+	this.min=min;
 	this.partidas = {};//que colleccion --> hemos decidido un array asociativo/ diccionario
 	this.crearPartida = function(num,owner){
 		//Comprobar los limites de num
-		if (4<=num && num<=10){
+		if (this.min<=num && num<=10){
 			//generar un codigo de 6 letras aleatorio
 			let codigo= this.obtenerCodigo();
 			//comprobar que no se usa
@@ -125,6 +126,10 @@ function Juego() {
 	this.obtenerListaJugadores=function(codigo){
 		return this.partidas[codigo].obtenerListaJugadores();
 	}
+	//Realizar la tarea.
+	this.realizarTarea = function(nick,codigo){
+		this.partidas[codigo].realizarTarea(nick);
+	}
 
 }
 //////////////////////////////
@@ -142,6 +147,43 @@ function Partida(num,owner,codigo,juego){
 	this.encargos = ["jardines","calles", "mobiliario", "basuras","electricidad"];
 
 	this.skip = 0;
+
+	//Realizar las tareas
+	this.realizarTarea = function(nick){
+		this.fase.realizarTarea(nick,this);
+	}
+
+	this.puedeRealizarTarea= function(nick){
+		this.usuarios[nick].realizarTarea();
+	}
+	this.tareaTerminada = function(){
+		if(this.comprobarTareasCompletadas()){
+			this.finPartida();
+		}
+	}
+	this.obtenerPorcentajeTarea= function(nick){
+		return this.usuarios[nick].obtenerPorcentajeTarea();
+	}
+
+	this.obtenerPorcentajeGlobal = function(){
+		var total = 0;
+		for (var key in this.usuarios){
+			total = total/this.obtenerPorcentajeTarea(key);
+		}
+		total = total/this.numJugadores();
+
+	}
+
+	this.comprobarTareasCompletadas = function(){
+		let res = true;
+		for(var key in this.usuarios){
+			if(this.usuarios[key].estadoTarea!="Completada"){
+				return false;
+				break;
+			}
+		}
+		return res;
+	}
 
 	//Obtener huecos 
 	this.obtenerHuecos = function(){
@@ -197,7 +239,7 @@ function Partida(num,owner,codigo,juego){
 		return Object.keys(this.usuarios).length;
 	}
 	this.comprobarMinimo = function(){
-		return this.numJugadores() >= 4;
+		return this.numJugadores() >= this.juego.min;
 	}
 
 	this.comprobarMaximo = function(){
@@ -481,8 +523,34 @@ function Usuario(nick,juego){
 	this.skip = false;
 
 	this.haVotado= false;
-
+	this.realizado = 0;
+	this.estadoTarea = "No completada";
+	this.porcentajeTarea = 0;
 	//////////
+	//RealizarTarea
+
+	this.realizarTarea = function(){
+
+		this.realizado++;
+		this.porcentajeTarea = this.porcentajeTarea+10;
+		//Cuando realizado es igual al maximo o en este caso a 10
+		if (this.realizado>=10 && this.porcentajeTarea==100){
+			this.estadoTarea = "Completada";
+			this.partida.tareaTerminada();
+			break;
+		}
+		console.log("Usuario "+this.nick+" realiza la tarea "+this.encargo+" y esta en estado "+this.estadoTarea);
+		
+		//el estado realizado pasa a estar completado  
+		//en el caso de que esete completada le decimos a la parotida tarea terminada
+		//entonces comprobamos las tareas terminadas
+		//en el de que todas las tareas esten completadas -- hay que hacer un fin partida
+	}
+
+	this.obtenerPorcentajeTarea = function(){
+		return this.porcentajeTarea;
+	}
+
 	this.crearPartida = function(num){
 		return this.juego.crearPartida(num,this);
 	}
@@ -561,6 +629,9 @@ function Inicial(){
 	this.atacar = function(){
 		console.log("En el estado inicial no se puede atacar");
 	}
+	this.realizarTarea = function(nick,partida){
+		//partida.puedeRealizarTarea(nick);
+	}
 };
 
 //FAse completado
@@ -606,6 +677,9 @@ function Completado(){
 	this.skip = function(){
 		this.puedoVotarSkip();
 	}
+	this.realizarTarea = function(nick,partida){
+		//partida.puedeRealizarTarea(nick);
+	}
 }
 
 function Jugando(){
@@ -632,6 +706,10 @@ function Jugando(){
 	//Atacar
 	this.atacar = function(impostor,ciudadano,partida){
 		partida.puedeAtacar(impostor,ciudadano);
+	}
+	//REalizamos la tarea
+	this.realizarTarea = function(nick,partida){
+		partida.puedeRealizarTarea(nick);
 	}
 };
 function Votacion(){
@@ -664,6 +742,9 @@ function Final(){
 
 	this.atacar = function(){
 		console.log("En el estado final no se puede atacar");
+	}
+	this.realizarTarea = function(nick,partida){
+		//partida.puedeRealizarTarea(nick);
 	}
 };
 

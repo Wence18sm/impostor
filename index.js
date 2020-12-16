@@ -10,6 +10,8 @@ var wss = require("./server/servidorWS.js");
 
 var servidorWS=new wss.ServidorWS();
 
+var min = process.argv.slice(2);
+
 app.set('port', process.env.PORT || 5000);
 
 app.use(express.static(__dirname + '/'));
@@ -17,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Creamos una inctancia de juego 
-var juego = new modelo.Juego();
+var juego = new modelo.Juego(min);
 
 
 app.get('/', function (request, response) {
