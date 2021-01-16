@@ -45,6 +45,7 @@ function lanzarJuego(){
   var spawnPoint;
   var tareasOn = true;
   var ataquesOn = true;
+  var votarOn = true;
   var final = false;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"}];
 
@@ -63,6 +64,7 @@ function lanzarJuego(){
     //this.load.spritesheet("gabe","cliente/assets/images/gabe.png",{frameWidth:24,frameHeight:24});
     //this.load.spritesheet("gabe","cliente/assets/images/male01-2.png",{frameWidth:32,frameHeight:32});
     this.load.spritesheet("varios","client/assets/images/final2.png",{frameWidth:24,frameHeight:32});
+    this.load.spritesheet("tumba","client/assets/images/tumba.png",{frameWidth:32,frameHeight:64});
   }
 
   function create() {
@@ -342,16 +344,18 @@ function lanzarJuego(){
 
   function crearColision(){
     if(ws.impostor && crear){
-      crear.physics.add.overlap(player,remotos,kill);
+      crear.physics.add.overlap(player,remotos,kill,()=>{return ataquesOn});
     }
   }
+
   function kill(sprite,inocente){
     //dibujar el sprite inocente muerto
     //avisar al servidor del ataque
     var nick = inocente.nick;
-   
+    
     if(teclaA.isDown){
       ataquesOn=false;
+      ws.console("Estoy atacando a:"+nick);
       ws.atacar(nick);
     }
   }
@@ -360,15 +364,15 @@ function lanzarJuego(){
     //añadir un sprite en la posicion del inocente
     //meter el sprite en un grupo de muertos(para gestionar la colision y poder lanzar la votacion)
     //crear la funcion que gestiona la colision de los vivos con los muertos.
-    var x=jugadores[inocente].x;
+    var x = jugadores[inocente].x;
     var y = jugadores[inocente].y;
     var numJugador= jugadores[inocente].numJugador;
 
-    var muerto = crear.physics.add.sprite(x,y,"varios",recursos[numJugador].frame); 
-
+    var muerto = crear.physics.add.sprite(x,y,"tumba",8); 
+    ws.console("he dibujado la tumba")
     muertos.add(muerto);
 
-    crear.physics.add.overlap(player,muertos,votacion);
+    crear.physics.add.overlap(player,muertos,votacion,()=>{return votarOn});
   }
 
   function votacion(sprite,muerto){
@@ -444,8 +448,9 @@ function lanzarJuego(){
     const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
     const nombre=recursos[numJugador].sprite;
-   if (remoto)
-  {
+   if (remoto){
+
+    if (datos.estado!="fantasma" || ws.estado == "fantasma") {
       remoto.body.setVelocity(0);
       remoto.setX(x);
       remoto.setY(y);
@@ -461,6 +466,9 @@ function lanzarJuego(){
       } else {
         remoto.anims.stop();
       }
+    }else{
+      remoto.visible = false;
+    }
   }
   }
 

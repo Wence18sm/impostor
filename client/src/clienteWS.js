@@ -52,17 +52,25 @@ function ClienteWS(){
 		this.socket.emit('atacar',this.nick,this.codigo,atacado);
 	}
 
+	this.enterrarCiudadano = function(atacado){
+		this.socket.emit('enterrar',this.codigo,atacado);
+	}
+
 	this.abandonarPartida = function(atacado){
 		this.socket.emit('abandonarPartida',this.nick,this.codigo);
 	}
 
 	this.movimiento=function(direccion,x,y){
-		var datos = {nick:this.nick,codigo:this.codigo,numJugador:this.numJugador,direccion:direccion,x:x,y:y};
+		var datos = {nick:this.nick,codigo:this.codigo,numJugador:this.numJugador,direccion:direccion,x:x,y:y,estado:this.estado};
 		this.socket.emit("movimiento",datos);
 	}
 
 	this.realizarTarea=function(){
 		this.socket.emit("realizarTarea",this.nick,this.codigo);
+	}
+
+	this.console = function(msg){
+		console.log(msg);
 	}
 
 
@@ -153,7 +161,7 @@ function ClienteWS(){
 			if(data.impostor){
 				//$('#avisarImpostor').modal("show");
 				cw.mostrarModalSimple('Eres el impostor, el duendecillo dice que MATES a todos.');
-				crearColision();
+				//crearColision();
 			}else{
 				cw.mostrarModalTarea(cli.encargo);
 			}
@@ -170,6 +178,7 @@ function ClienteWS(){
 					lanzarJugadorRemoto(lista[i].nick,lista[i].numJugador);
 				}
 			}
+			crearColision();
 		});
 		this.socket.on('abandonarPartida',function(data){
 			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
@@ -180,11 +189,18 @@ function ClienteWS(){
 		});
 		this.socket.on("muereInocente",function(atacado){
 			console.log(atacado+" ha sido atacado");
-			if(cli.nick==inocente){
+			if(cli.nick==atacado){
 				cli.estado="fantasma";
+				cli.enterrarCiudadano(atacado);
 			}
-			dibujarMuereInocente(inocente);
+			//dibujarMuereInocente(atacado);
 		});
+
+		this.socket.on('enterrar',function(data){
+			dibujarMuereInocente(data);
+			cli.console(data);
+		});
+
 		this.socket.on("tareaRealizada",function(EstadoTarea){
 			console.log("El estado de su tarea es: "+EstadoTarea);
 			//tareasOn=true;
@@ -197,9 +213,7 @@ function ClienteWS(){
 		});
 
 		this.socket.on('hasAtacado',function(fase){
-			if(fase=="jugando"){
 				ataquesOn=true;
-			}
 		});
 
 		this.socket.on('final',function(data){

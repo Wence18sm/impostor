@@ -121,6 +121,10 @@ function ServidorWS(){
 		     	cli.enviarATodos(io,codigo,"muereInocente",atacado);
 		     	cli.enviarRemitente(socket,"hasAtacado",fase);
 		    });
+
+		    socket.on('enterrar', function(codigo,atacado) {
+		    	cli.enviarATodos(io,codigo,"enterrar",atacado);
+		    });
 		    //});
 
 		    socket.on('abandonarPartida', function(nick,codigo) {
