@@ -175,6 +175,14 @@ function ControlWeb($){
 		$('#realizarTarea').modal("show");
 	}
 
+	this.mostrarFinalPartida= function(msg){
+		$('#avisarImpostor').remove();
+		$('#avisarTareas').remove();
+		var cadena = "<p id=final'>"+msg+"</p>";
+		$('#contenidoModalFinal').append(cadena);
+		$('#finalPartida').modal("show");
+	}
+
 	this.limpiar = function(){
 		$('#mostrarUP').remove();
 		$('#mostrarCP').remove();

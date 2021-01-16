@@ -76,6 +76,25 @@
 		  </div>
 		</div>
 
+		<div class="modal" id="finalPartida"tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h2 class="modal-title text-center">FINAL DE PARTIDA</h2>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body" id="contenidoModalFinal">
+		      </div>
+		      <div class="modal-footer">
+		        
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Finalizar partida</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 	</div>
 
 	<div class="row text-center">
@@ -90,7 +109,7 @@
 	var ws = new ClienteWS();
 	var cw = new ControlWeb($);
 
-	cw.mostrarCrearPartida(2);
+	cw.mostrarCrearPartida(4);
 	ws.listaPartidasDisponibles();
 
 	</script>

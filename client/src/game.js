@@ -466,7 +466,8 @@ function lanzarJuego(){
 
   function finPartida (data){
     final=true;
-    cw.mostrarModalSimple("Fin de la partida "+ data);
+    //cw.mostrarModalSimple("Fin de la partida "+ data);
+    cw.mostrarFinalPartida("Fin de la partida: "+ data);
   }
 
   // function moverRemoto(direccion,nick,numJugador)
