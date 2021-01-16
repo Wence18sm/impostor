@@ -119,7 +119,9 @@ function ServidorWS(){
 		        juego.atacar(nick,codigo,atacado);
 		     	//cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
 		     	cli.enviarATodos(io,codigo,"muereInocente",atacado);
+		     	cli.enviarRemitente(socket,"hasAtacado",fase);
 		    });
+		    //});
 
 		    socket.on('abandonarPartida', function(nick,codigo) {
 		    	var partida = juego.partidas[codigo];
@@ -147,12 +149,13 @@ function ServidorWS(){
 
 		     socket.on('realizarTarea', function(nick,codigo) {
 		     	var partida =juego.partidas[codigo];
-		     	juego.realizarTarea(nick,codigo);
+		     	var data = juego.realizarTarea(nick,codigo);
 		    	var fase=partida.fase.nombre;
-		    	var porcentajeT = juego.partidas[codigo].obtenerPorcentajeTarea(nick);
-		    	cli.enviarRemitente(socket,"tareaRealizada",porcentajeT);
+		    	//var porcentajeT = juego.partidas[codigo].obtenerPorcentajeTarea(nick);
+		    	cli.enviarRemitente(socket,"tareaRealizada",data.EstadoTarea);
+		    	cli.enviarATodos(io,codigo,"porcentajeGlobal",data.Porcentaje);
 			    if (fase=="final"){
-			    	cli.enviarATodos(io, codigo, "final","ganan impostores");
+			    	cli.enviarATodos(io, codigo, "final","ganan ciudadanos");
 			    }
 			
 		    	

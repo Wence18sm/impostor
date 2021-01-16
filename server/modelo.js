@@ -107,8 +107,9 @@ function Juego(min) {
 	}
 	this.obtenerEncargo = function(nick,codigo){
 		var res = {};
-		var encargo = this.partidas[codigo].usuarios[nick].encargo;
 		var impostor = this.partidas[codigo].usuarios[nick].impostor;
+		var encargo = this.partidas[codigo].usuarios[nick].encargo;
+		
 		res = {"encargo":encargo,"impostor":impostor};
 
 		return res;
@@ -128,7 +129,7 @@ function Juego(min) {
 	}
 	//Realizar la tarea.
 	this.realizarTarea = function(nick,codigo){
-		this.partidas[codigo].realizarTarea(nick);
+		return this.partidas[codigo].realizarTarea(nick);
 	}
 
 }
@@ -150,17 +151,23 @@ function Partida(num,owner,codigo,juego){
 
 	//Realizar las tareas
 	this.realizarTarea = function(nick){
-		this.fase.realizarTarea(nick,this);
+		return this.fase.realizarTarea(nick,this);
 	}
 
 	this.puedeRealizarTarea= function(nick){
-		this.usuarios[nick].realizarTarea();
+		//this.usuarios[nick].realizarTarea();
+		return this.usuarios[nick].completarTarea();
 	}
 	this.tareaTerminada = function(){
-		if(this.comprobarTareasCompletadas()){
+		var tCompletadas = this.obtenerPorcentajeTareasCompletadas();
+		if(tCompletadas==100){
 			this.finPartida();
 		}
+			return tCompletadas;
 	}
+
+
+
 	this.obtenerPorcentajeTarea= function(nick){
 		return this.usuarios[nick].obtenerPorcentajeTarea();
 	}
@@ -253,8 +260,8 @@ function Partida(num,owner,codigo,juego){
 	}
 
 	this.puedeIniciarPartida = function (){
-		this.asignarEncargo();
 		this.asignarImpostor();
+		this.asignarEncargo();
 		this.fase = new Jugando();
 	}
 	///////////
@@ -286,7 +293,9 @@ function Partida(num,owner,codigo,juego){
 	//Asignar encargos
 	this.asignarEncargo = function (){
 		for(usr in this.usuarios){
+			if(!this.usuarios[usr].impostor){
 			this.usuarios[usr].encargo = this.encargos[randomInt(0,this.encargos.length)];
+			}
 		}
 		
 	}
@@ -502,6 +511,18 @@ function Partida(num,owner,codigo,juego){
 		}else{console.log('Este usuario ya ha votado');}
 	}
 
+	//obtener porcentaje de la tarea
+	this.obtenerPorcentajeTareasCompletadas = function(){
+		var cont=0;
+
+		for(var key in this.usuarios){
+			if(this.usuarios[key].estadoTarea=="Completada"){
+				cont ++;
+			}
+		}
+		return cont/(Object.keys(this.usuarios).length-1) *100;
+	}
+
 
 	//////////////////////////
 } 
@@ -529,6 +550,7 @@ function Usuario(nick,juego){
 	//////////
 	//RealizarTarea
 
+	// Realziar tareas MAL
 	this.realizarTarea = function(){
 
 		this.realizado++;
@@ -537,7 +559,6 @@ function Usuario(nick,juego){
 		if (this.realizado>=10 && this.porcentajeTarea==100){
 			this.estadoTarea = "Completada";
 			this.partida.tareaTerminada();
-			break;
 		}
 		console.log("Usuario "+this.nick+" realiza la tarea "+this.encargo+" y esta en estado "+this.estadoTarea);
 		
@@ -550,6 +571,20 @@ function Usuario(nick,juego){
 	this.obtenerPorcentajeTarea = function(){
 		return this.porcentajeTarea;
 	}
+
+	////////////////////////
+
+	this.completarTarea = function(){
+		var porcentaje = 0;
+		if(this.estadoTarea== "No completada"){
+			this.estadoTarea="Completada";
+			porcentaje = this.partida.tareaTerminada();
+		}
+		return {"EstadoTarea":this.estadoTarea,"Porcentaje":porcentaje};
+	}
+
+
+	//////////////////////////
 
 	this.crearPartida = function(num){
 		return this.juego.crearPartida(num,this);
@@ -709,7 +744,7 @@ function Jugando(){
 	}
 	//REalizamos la tarea
 	this.realizarTarea = function(nick,partida){
-		partida.puedeRealizarTarea(nick);
+		return partida.puedeRealizarTarea(nick);
 	}
 };
 function Votacion(){

@@ -96,7 +96,7 @@ function ClienteWS(){
 			cli.codigo = data.codigo;
 			cli.maximo = data.maximo;
 			cli.numJugador=data.numJugador;
-			cli.estado="vivo";
+			cli.estado = "vivo";
 			console.log(data);
 			console.log("El usuario: "+data.nick+" se ha unido a la partida con el codigo: "+data.codigo);
 			if (data.nick!=""){
@@ -151,8 +151,11 @@ function ClienteWS(){
 			cli.impostor=data.impostor;
 			cli.encargo=data.encargo;
 			if(data.impostor){
-				$('#avisarImpostor').modal("show");
+				//$('#avisarImpostor').modal("show");
+				cw.mostrarModalSimple('Eres el impostor, el duendecillo dice que MATES a todos.');
 				crearColision();
+			}else{
+				cw.mostrarModalTarea(cli.encargo);
 			}
 		});
 
@@ -182,9 +185,28 @@ function ClienteWS(){
 			}
 			dibujarMuereInocente(inocente);
 		});
-		this.socket.on("tareaRealizada",function(porcentajeT){
-			console.log("Sigue la partida en:"+porcentajeT);
+		this.socket.on("tareaRealizada",function(EstadoTarea){
+			console.log("El estado de su tarea es: "+EstadoTarea);
+			//tareasOn=true;
 		});
+
+		this.socket.on("porcentajeGlobal",function(Porcentaje){
+			console.log("El estado de su partida para los ciudadanos es:"+Porcentaje);
+			//cw.mostraBarraProgreso();
+			//tareasOn=true;
+		});
+
+		this.socket.on('hasAtacado',function(fase){
+			if(fase=="jugando"){
+				ataquesOn=true;
+			}
+		});
+
+		this.socket.on('final',function(data){
+			finPartida(data);
+		});
+
+
 
 	}
 	// El constructor del objeto lo llama:

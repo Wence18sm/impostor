@@ -153,6 +153,28 @@ function ControlWeb($){
 		$('#listaEsperando').append(cadena);
 	}
 
+	this.mostrarModalSimple= function(msg){
+		$('#avisarImpostor').remove();
+		var cadena = "<p id='avisarImpostor'>"+msg+"</p>";
+		$('#contenidoModal').append(cadena)
+		$('#modalGeneral').modal("show");
+	}
+	this.mostrarModalTarea= function(tarea){
+		$('#avisarImpostor').remove();
+		$('#avisarTareas').remove();
+		var cadena = "<p id='avisarTareas'>"+'La tarea que se te ha asignado es: '+tarea+"</p>";
+		$('#contenidoModal').append(cadena)
+		$('#modalGeneral').modal("show");
+	}
+
+	this.mostrarModalRealizarTarea= function(tarea){
+		$('#avisarImpostor').remove();
+		$('#avisarTareas').remove();
+		var cadena = "<p id=tarea'>"+'Debe realizar la tarea: '+tarea+"</p>";
+		$('#contenidoModalTareas').append(cadena);
+		$('#realizarTarea').modal("show");
+	}
+
 	this.limpiar = function(){
 		$('#mostrarUP').remove();
 		$('#mostrarCP').remove();

@@ -43,6 +43,9 @@ function lanzarJuego(){
   var remotos;
   var muertos;
   var spawnPoint;
+  var tareasOn = true;
+  var ataquesOn = true;
+  var final = false;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"}];
 
   function preload() {
@@ -328,7 +331,7 @@ function lanzarJuego(){
 
     cursors = crear.input.keyboard.createCursorKeys();
     remotos = crear.add.group();
-     muertos= crear.add.group();
+    muertos= crear.add.group();
     teclaA=crear.input.keyboard.addKey('a');
     teclaV=crear.input.keyboard.addKey('v');
     teclaT=crear.input.keyboard.addKey('t');
@@ -346,7 +349,9 @@ function lanzarJuego(){
     //dibujar el sprite inocente muerto
     //avisar al servidor del ataque
     var nick = inocente.nick;
+   
     if(teclaA.isDown){
+      ataquesOn=false;
       ws.atacar(nick);
     }
   }
@@ -383,11 +388,11 @@ function lanzarJuego(){
     //objeto.nombre="jardines";
     if(ws.encargo==objeto.properties.tarea && teclaT.isDown){
     //if(ws.encargos==tareas.nombre){
-       //console.log("Reaizar tarea"+ws.encargo);
+       //console.log("Realizar tarea"+ws.encargo);
+       tareasOn=false;
        ws.realizarTarea();
-       //ws.realizarTarea();
+       cw.mostrarModalRealizarTarea(ws.encargo);
     }
-    //console.log("Realizar tarea");
   }
 
   function lanzarJugador(nick,numJugador){
@@ -395,7 +400,7 @@ function lanzarJuego(){
     player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
     // Watch the player and worldLayer for collisions, for the duration of the scene:
     crear.physics.add.collider(player, worldLayer);
-    crear.physics.add.collider(player, capaTareas,tareas);
+    crear.physics.add.collider(player, capaTareas,tareas,()=>{return tareasOn});
     //crear.physics.add.collider(player2, worldLayer);
     jugadores[nick]=player;
     jugadores[nick].nick=nick;
@@ -459,6 +464,10 @@ function lanzarJuego(){
   }
   }
 
+  function finPartida (data){
+    final=true;
+    cw.mostrarModalSimple("Fin de la partida "+ data);
+  }
 
   // function moverRemoto(direccion,nick,numJugador)
   // {
