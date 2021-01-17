@@ -77,8 +77,9 @@ function ServidorWS(){
 
 		    socket.on('lanzarVotacion', function(nick,codigo) {
 		       juego.lanzarVotacion(nick,codigo);
+		       lista = juego.obtenerListaJugadores(codigo);
 		       var fase = juego.partidas[codigo].fase.nombre;
-		       cli.enviarATodos(io,codigo,"votacionLanzada",fase);
+		       cli.enviarATodos(io,codigo,"votacionLanzada",lista);
 		    });
 
 		    socket.on('saltarVoto', function(nick,codigo) {
@@ -101,8 +102,15 @@ function ServidorWS(){
 
 		       if(partida.todosHanVotado()){
 		       		//enviar a todos el mas votado
-		       		var data={"elegido":partida.elegido,"fase":partida.fase.nombre}
+		       		var msg = partida.conocerVotacion();
+		       		var data={"elegido":partida.elegido,"fase":partida.fase.nombre,"msg":msg};
+		       		
 		       		cli.enviarATodos(io,codigo,"finalVotacion",data);
+
+		       		if(data.fase=="final"){
+		       			cli.enviarATodos(io,codigo,"finalPartida",partida.comprobarFinal());
+		       		}
+
 		       }else{
 		       		//enviar la lista de los que han votado
 		       		cli.enviarATodos(io,codigo,"haVotado",partida.listaHanVotado());
@@ -120,6 +128,15 @@ function ServidorWS(){
 		     	//cli.enviarRemitente(socket,"atacar",{"atacado":atacado});
 		     	cli.enviarATodos(io,codigo,"muereInocente",atacado);
 		     	cli.enviarRemitente(socket,"hasAtacado",fase);
+
+		     	var final = partida.comprobarFinal();
+
+		     	if(final!= undefined){
+
+		     		cli.enviarATodos(io,codigo,"finalPartida",final);
+		     	}
+
+
 		    });
 
 		    socket.on('enterrar', function(codigo,atacado) {

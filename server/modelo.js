@@ -449,10 +449,11 @@ function Partida(num,owner,codigo,juego){
 	this.comprobarFinal = function(){
 		if (this.gananImpostores()){
 			this.finPartida();
+			return "Ganan los impostores";
 		}
-
 		if (this.gananCiudadanos()){
 			this.finPartida();
+			return "Ganan los ciudadanos";
 		}
 	}
 	//Comprobar la votacion
@@ -460,9 +461,12 @@ function Partida(num,owner,codigo,juego){
 		if(this.todosHanVotado()){
 		let elegido=this.maxVotado(); // hacer el mas votado
 		if (elegido && elegido.votos>this.numeroSkips()){
-			elegido.esAtacado();
-			this.elegido= elegido.nick;
+			elegido.jugadorMeAtaca();
+			this.elegido = elegido.nick;
+		}else{
+			this.elegido == "skip";
 		}
+		
 		this.finalVotacion();
 		//return elegido;
 		}
@@ -503,11 +507,10 @@ function Partida(num,owner,codigo,juego){
 		if(!this.usuarios[votante].haVotado){
 			if(sospechoso == 'skip'){
 				this.skip ++;
-				this.usuarios[votante].haVotado = true;
 			}else{
-				this.usuarios[sospechoso].votos ++;
-				this.usuarios[votante].haVotado = true;
+				this.usuarios[sospechoso].votos ++;	
 			}
+		this.usuarios[votante].haVotado = true;
 		}else{console.log('Este usuario ya ha votado');}
 	}
 
@@ -523,6 +526,14 @@ function Partida(num,owner,codigo,juego){
 		return cont/(Object.keys(this.usuarios).length-1) *100;
 	}
 
+	this.conocerVotacion = function(){
+		if(this.elegido == "skip"){
+			return "Nadie ha muerto";
+		}else{
+			return this.elegido;
+		}
+	}
+
 
 	//////////////////////////
 } 
@@ -533,7 +544,7 @@ function Partida(num,owner,codigo,juego){
 function Usuario(nick,juego){
 	this.nick=nick;
 	this.juego = juego;
-	this.partida
+	this.partida;
 	this.impostor = false;
 	this.encargo = " ";
 	this.numJugador;
@@ -823,6 +834,9 @@ function Fantasma(){
 
 	this.lanzarVotacion = function(usr){
 		//no puede votar
+	}
+	this.votarJugador = function (sospechoso,votante,partida){
+		//partida.votarJugador(sospechoso,votante);
 	}
 };
 

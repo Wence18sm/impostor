@@ -74,7 +74,10 @@ function ControlWeb($){
 		cadena = cadena +'<div class="row">';
 			cadena = cadena +'<div class="col-md-4"></div>';
 			cadena = cadena +'<div class="col-md-4">';	
+
+			if(ws.owner){
 				cadena = cadena +'<button type="button" id="btnIniciarP" class="btn btn-primary btn-block" style="background-color:#F5830B;">Iniciar partida</button>';
+			}
 			cadena = cadena + '</div>';
 			cadena = cadena +'<div class="col-md-4"></div>';
 		cadena = cadena +'</div>';
@@ -142,8 +145,9 @@ function ControlWeb($){
 	}
 
 	this.mostrarListaJugadores=function(lista){
+		//this.limpiar();
 	  	$('#mostrarListaEsperando').remove();
-	  	var cadena;
+	  	var cadena = '';
 	 	cadena= cadena +'<div id="mostrarListaEsperando"><h3>Jugadores en partida:</h3>';
 		  	cadena =cadena+'<ul class="list-group">';
 		  	 for(var i=0;i<lista.length;i++){
@@ -181,6 +185,62 @@ function ControlWeb($){
 		var cadena = "<p id=final'>"+msg+"</p>";
 		$('#contenidoModalFinal').append(cadena);
 		$('#finalPartida').modal("show");
+
+		$('#volverAlMenu').on('click',function(){
+	    	cw.limpiarJuego();
+	    	$('#modalGeneral').remove();
+	    	ws.reset();
+	    	cw.mostrarCrearPartida(4);
+	    	ws.listaPartidasDisponibles();
+
+
+	    });
+	}
+
+	this.mostrarModalVotacion=function(lista){
+		this.limpiar();
+		var cadena='<div id="votacion"><h2>Votación</h2>';		
+		cadena =cadena+'<div class="input-group">';
+	  	 for(var i=0;i<lista.length;i++){
+	  		cadena=cadena+'<div><input type="radio" name="optradio" value="'+lista[i].nick+'"> '+lista[i].nick+'</div>';
+	  	}
+	  	cadena=cadena+'<div><input type="radio" name="optradio" value="-1"> Saltar voto</div>';
+		cadena=cadena+'</div>';
+		
+		$("#contenidoModal").append(cadena);
+		if(ws.estado=="vivo"){
+			$("#pie").append('<button type="button" id="votar" class="btn btn-secondary" >Votar</button>');
+		}
+		$('#modalGeneral').modal("show");
+		
+		var sospechoso=undefined;
+		$('.input-group input').on('change', function() {
+		   sospechoso=$('input[name=optradio]:checked', '.input-group').val(); 
+		});
+		
+		$('#votar').on('click',function(){
+	    	$('#votar').remove();
+	    	if (sospechoso!="-1"){
+		    	ws.votar(sospechoso);
+		    }
+		    else{
+	    		ws.saltarVoto();
+	    	}
+	    });
+
+	};
+	this.mostrarModalMuerte= function(msg){
+		this.limpiar();
+		var cadena = "<p id='muerte'>"+'Por consenso, se ha expulsado a:'+msg+"</p>";
+		$('#contenidoModal').append(cadena);
+		$('#modalGeneral').modal("show");
+	}
+
+	this.mostrarModalSaltarVotacion= function(){
+		this.limpiar();
+		var cadena = "<p id='saltarVoto'>"+"Los ciudadanos no han llegado a un acuerdo, no se ha expulsado del pueblo a nadie"+"</p>";
+		$('#contenidoModal').append(cadena);
+		$('#modalGeneral').modal("show");
 	}
 
 	this.limpiar = function(){
@@ -188,6 +248,23 @@ function ControlWeb($){
 		$('#mostrarCP').remove();
 		$('#mostrarER').remove();
 		$('#mostrarListaEsperando').remove();
+		$('#avisarImpostor').remove();
+		$('#avisarTareas').remove();
+		$('#tarea').remove();
+		$('#votacion').remove();
+		$('#muerte').remove();
+		$('#saltarVoto').remove();
+	}
+
+	this.limpiarJuego = function(){
+		this.limpiar();
+		$('#game-container').remove();
+
+	}
+
+	this.llamarAJuego = function(){
+		this.limpiar();
+		$('#game').append('<div id="game-container"></div>');
 	}
 
 }

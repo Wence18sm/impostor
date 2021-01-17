@@ -7,6 +7,8 @@ function ClienteWS(){
 	this.numJugador=undefined;
 	this.estado;
 	this.encargo;
+	this.owner = false;
+
 
 	//crear partida
 	this.crearPartida = function(nick,numero){
@@ -73,7 +75,10 @@ function ClienteWS(){
 		console.log(msg);
 	}
 
-
+	this.reset = function(){
+		this.codigo= undefined;
+		this.numJugador=undefined;
+	}
 
 	
 	
@@ -91,8 +96,9 @@ function ClienteWS(){
 		//crear partida
 		this.socket.on('partidaCreada',function(data){
 			cli.codigo = data.codigo;
-			console.log("codigo partida: "+data.codigo);
-			console.log("propietario: "+data.owner);
+			cli.owner = true;
+			console.log("Codigo partida: "+data.codigo);
+			console.log("Propietario: "+data.owner);
 			 if (data.codigo!='fallo'){
 			 	cli.numJugador=0;
 			 	cli.estado=="vivo";
@@ -125,6 +131,7 @@ function ClienteWS(){
 			console.log("La partida esta en fase: "+fase);
 			cli.obtenerEncargo();
 			cw.limpiar();
+			cw.llamarAJuego();
 			lanzarJuego();
 		});
 		this.socket.on('listaDePartidasDisponibles',function(lista){
@@ -137,8 +144,10 @@ function ClienteWS(){
 		this.socket.on('listaDePartidas',function(lista){
 			console.log(lista);
 		});
-		this.socket.on('votacionLanzada',function(data){
-			console.log(data);
+		this.socket.on('votacionLanzada',function(lista){
+			votarOn = false;
+			cw.mostrarModalVotacion(lista);
+			console.log(lista);
 		});
 		//final de la votacion
 		//cuantos han votado
@@ -149,8 +158,23 @@ function ClienteWS(){
 			//dibujarVotacion(lista)
 		});
 		this.socket.on('finalVotacion',function(data){
-			console.log(data);
+
+			votarOn = true;
+
+			if(data.mgs == undefined){
+				cw.mostrarModalSaltarVotacion();
+			}else{
+				cw.mostrarModalMuerte(data.msg);
+
+				if(data.elegido == cli.nick){
+				cli.estado = "fantasma";
+				}
+			}
+			
+			
+			console.log(data.fase);
 		});
+
 		this.socket.on('haVotado',function(data){
 			console.log(data);
 		});
@@ -217,6 +241,11 @@ function ClienteWS(){
 		});
 
 		this.socket.on('final',function(data){
+			finPartida(data);
+		});
+
+		this.socket.on('finalPartida',function(data){
+			ataquesOn=false;
 			finPartida(data);
 		});
 

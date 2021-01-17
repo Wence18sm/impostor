@@ -47,7 +47,7 @@ function lanzarJuego(){
   var ataquesOn = true;
   var votarOn = true;
   var final = false;
-  var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"}];
+  var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"},{frame:47,sprite:"mago"}];
 
   function preload() {
     this.load.image("tiles", "client/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -326,6 +326,52 @@ function lanzarJuego(){
         //frameRate: 10,
         repeat: -1
       });
+      // animaciones Sprite 5
+      const anims6 = crear.anims;
+      anims5.create({
+        key: "mago-left-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 39,
+          end: 41,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims6.create({
+        key: "mago-right-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 15,
+          end: 17,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims6.create({
+        key: "mago-front-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 27,
+          end: 29,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims6.create({
+        key: "mago-back-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 3,
+          end: 5,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
 
     // const camera = this.cameras.main;
     // camera.startFollow(player);
@@ -369,7 +415,7 @@ function lanzarJuego(){
     var numJugador= jugadores[inocente].numJugador;
 
     var muerto = crear.physics.add.sprite(x,y,"tumba",8); 
-    ws.console("he dibujado la tumba")
+    ws.console("He dibujado la tumba")
     muertos.add(muerto);
 
     crear.physics.add.overlap(player,muertos,votacion,()=>{return votarOn});
@@ -378,8 +424,9 @@ function lanzarJuego(){
   function votacion(sprite,muerto){
     //comprobar si e jugador local si pulsa la tecla de votacion por ejemplo la v
     //en ese caso, llamamos al servidor para lanzar la votacion
-
     if(teclaV.isDown){
+      votarOn=false;
+      ws.console("He lanzado la votacion");
       ws.lanzarVotacion();
     }
   }
