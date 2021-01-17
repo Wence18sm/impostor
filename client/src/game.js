@@ -12,7 +12,7 @@ function lanzarJuego(){
 
   const config = {
     type: Phaser.AUTO,
-    width: 500,
+    width: 800,
     height: 400,
     parent: "game-container",
     pixelArt: true,
@@ -47,7 +47,8 @@ function lanzarJuego(){
   var ataquesOn = true;
   var votarOn = true;
   var final = false;
-  var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"},{frame:47,sprite:"mago"}];
+  var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"},
+                {frame:48,sprite:"mago"},{frame:51,sprite:"coletas"},{frame:54,sprite:"luchadora"},{frame:57,sprite:"luchador"}];
 
   function preload() {
     this.load.image("tiles", "client/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -148,7 +149,9 @@ function lanzarJuego(){
         //frameRate: 10,
         repeat: -1
       });
-
+      /////////////////////
+      //Primera animacion de varios
+      ////////
       const anims2 = crear.anims;
       anims2.create({
         key: "ana-left-walk",
@@ -188,7 +191,9 @@ function lanzarJuego(){
         //frameRate: 10,
         repeat: -1
       });
-
+      ////////
+      // Segunda animacion de varios
+      ///////
       const anims3 = crear.anims;
       anims3.create({
         key: "pepe-left-walk",
@@ -234,14 +239,16 @@ function lanzarJuego(){
         //frameRate: 10,
         repeat: -1
       });
-
+      /////////////
+      //Tercera animacion de varios
+      ///////
     const anims4 = crear.anims;
       anims4.create({
         key: "tom-left-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 39,
-          end: 41,
+          start: 42,
+          end: 44,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -251,8 +258,8 @@ function lanzarJuego(){
         key: "tom-right-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 15,
-          end: 17,
+          start: 18,
+          end: 20,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -262,8 +269,8 @@ function lanzarJuego(){
         key: "tom-front-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 27,
-          end: 29,
+          start: 30,
+          end: 32,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -273,21 +280,23 @@ function lanzarJuego(){
         key: "tom-back-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 3,
-          end: 5,
+          start: 6,
+          end: 8,
           //zeroPad: 3
         }),
         //frameRate: 10,
         repeat: -1
       });
-
+      ////////////
+      //Cuarta animacion de varios
+      //
       const anims5 = crear.anims;
       anims5.create({
         key: "rayo-left-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 39,
-          end: 41,
+          start: 45,
+          end: 47,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -297,8 +306,8 @@ function lanzarJuego(){
         key: "rayo-right-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 15,
-          end: 17,
+          start: 21,
+          end: 23,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -308,8 +317,8 @@ function lanzarJuego(){
         key: "rayo-front-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 27,
-          end: 29,
+          start: 33,
+          end: 35,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -319,21 +328,22 @@ function lanzarJuego(){
         key: "rayo-back-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 3,
-          end: 5,
+          start: 9,
+          end: 11,
           //zeroPad: 3
         }),
         //frameRate: 10,
         repeat: -1
       });
-      // animaciones Sprite 5
+      ///////////////
+      // Quinta animacion de varios
       const anims6 = crear.anims;
-      anims5.create({
+      anims6.create({
         key: "mago-left-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 39,
-          end: 41,
+          start: 84,
+          end: 86,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -343,8 +353,8 @@ function lanzarJuego(){
         key: "mago-right-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 15,
-          end: 17,
+          start: 60,
+          end: 62,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -354,8 +364,8 @@ function lanzarJuego(){
         key: "mago-front-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 27,
-          end: 29,
+          start: 72,
+          end: 74,
           //zeroPad: 3
         }),
         //frameRate: 10,
@@ -365,8 +375,152 @@ function lanzarJuego(){
         key: "mago-back-walk",
         frames: anims.generateFrameNames("varios", {
           //prefix: "misa-left-walk.",
-          start: 3,
-          end: 5,
+          start: 48,
+          end: 50,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+
+      ///////////////
+      // Seis animacion de varios
+      const anims7 = crear.anims;
+      anims7.create({
+        key: "coletas-left-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 87,
+          end: 89,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims7.create({
+        key: "coletas-right-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 63,
+          end: 65,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims7.create({
+        key: "coletas-front-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 75,
+          end: 77,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims7.create({
+        key: "coletas-back-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 51,
+          end: 53,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+
+      ///////////////
+      // Septima animacion de varios
+      const anims8 = crear.anims;
+      anims8.create({
+        key: "luchadora-left-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 90,
+          end: 92,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims8.create({
+        key: "luchadora-right-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 66,
+          end: 68,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims8.create({
+        key: "luchadora-front-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 78,
+          end: 80,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims8.create({
+        key: "luchadora-back-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 54,
+          end: 56,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+
+      ///////////////
+      // Octava animacion de varios
+      const anims9 = crear.anims;
+      anims9.create({
+        key: "luchador-left-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 93,
+          end: 95,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims9.create({
+        key: "luchador-right-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 69,
+          end: 71,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims9.create({
+        key: "luchador-front-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 81,
+          end: 83,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims9.create({
+        key: "luchador-back-walk",
+        frames: anims.generateFrameNames("varios", {
+          //prefix: "misa-left-walk.",
+          start: 57,
+          end: 59,
           //zeroPad: 3
         }),
         //frameRate: 10,
