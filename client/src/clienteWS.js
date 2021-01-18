@@ -58,7 +58,7 @@ function ClienteWS(){
 		this.socket.emit('enterrar',this.codigo,atacado);
 	}
 
-	this.abandonarPartida = function(atacado){
+	this.abandonarPartida = function(){
 		this.socket.emit('abandonarPartida',this.nick,this.codigo);
 	}
 
@@ -204,8 +204,16 @@ function ClienteWS(){
 			}
 			crearColision();
 		});
-		this.socket.on('abandonarPartida',function(data){
+
+		this.socket.on('jugadorHaAbandonado',function(data){
 			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
+			quitarSprite(data.nick);
+			cw.mostrarModalAbandonarPartida(data.nick);
+		});
+
+		this.socket.on('hasAbandonadoLaPartida',function(data){
+			console.log(data.nick+" ha abandonado la partida con codigo "+data.codigo);
+			cw.mostrarModalHeAbandonado(data.nick);
 		});
 
 		this.socket.on("moverRemoto",function(datos){
@@ -247,6 +255,7 @@ function ClienteWS(){
 		this.socket.on('finalPartida',function(data){
 			ataquesOn=false;
 			finPartida(data);
+			
 		});
 
 

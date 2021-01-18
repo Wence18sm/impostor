@@ -274,9 +274,9 @@ function Partida(num,owner,codigo,juego){
 	this.puedeAbandonarPartida = function(nick){
 		this.eliminarUsuario(nick);
 
-		if (!this.comprobarMinimo()){
-			this.fase = new Inicial();
-		}
+		// if (!this.comprobarMinimo()){
+		// 	this.fase = new Inicial();
+		// }
 
 		if (this.numJugadores()<=0){
 			this.juego.eliminarPartida(this.codigo);
@@ -610,7 +610,7 @@ function Usuario(nick,juego){
 
 		if (this.partida.numJugadores()<=0){
 			this.juego.eliminarPartida(this.partida.codigo);
-			cosole.log(this.nick," era el ultimo jugador de la partida")
+			console.log(this.nick," era el ultimo jugador de la partida")
 		}
 
 	}

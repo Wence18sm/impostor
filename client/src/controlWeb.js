@@ -77,7 +77,11 @@ function ControlWeb($){
 
 			if(ws.owner){
 				cadena = cadena +'<button type="button" id="btnIniciarP" class="btn btn-primary btn-block" style="background-color:#F5830B;">Iniciar partida</button>';
+				
 			}
+			if(!ws.owner){
+			cadena = cadena +'<button type="button" id="btnAbandonar" class="btn btn-primary btn-block" style="background-color:#F5830B;">Abandonar partida</button>';
+			}	
 			cadena = cadena + '</div>';
 			cadena = cadena +'<div class="col-md-4"></div>';
 		cadena = cadena +'</div>';
@@ -97,7 +101,16 @@ function ControlWeb($){
 		ws.iniciarPartida();
 		//mostrar Esperando rival
 
-	})
+		})
+
+		$('#btnAbandonar').on('click',function(){
+			ws.abandonarPartida();
+			cw.limpiarJuego();
+	    	$('#modalGeneral').remove();
+	    	ws.reset();
+	    	cw.mostrarCrearPartida(4);
+	    	ws.listaPartidasDisponibles();
+		})
 
 
 	}
@@ -235,6 +248,30 @@ function ControlWeb($){
 		$('#contenidoModal').append(cadena);
 		$('#modalGeneral').modal("show");
 	}
+	// Modal abandonar partida.
+	this.mostrarModalAbandonarPartida= function(msg){
+		this.limpiar();
+		var cadena = "<p id='haAbandonado'>"+'El jugador '+msg+' ha abandonado la partida.'+"</p>";
+		$('#contenidoModal').append(cadena);
+		$('#modalGeneral').modal("show");
+	}
+
+	this.mostrarModalHeAbandonado= function(msg){
+		$('#avisarImpostor').remove();
+		$('#avisarTareas').remove();
+		var cadena = "<p id=abandonar'>"+msg+' como jugador abandono la partida.'+"</p>";
+		$('#contenidoModalAbandonar').append(cadena);
+		$('#abandonarPartida').modal("show");
+
+		$('#abandonarAlMenu').on('click',function(){
+	    	cw.limpiarJuego();
+	    	$('#modalGeneral').remove();
+	    	ws.reset();
+	    	cw.mostrarCrearPartida(4);
+	    	ws.listaPartidasDisponibles();
+	    });
+	}
+	////////////////////////////////////////////
 
 	this.mostrarModalSaltarVotacion= function(){
 		this.limpiar();
@@ -254,6 +291,9 @@ function ControlWeb($){
 		$('#votacion').remove();
 		$('#muerte').remove();
 		$('#saltarVoto').remove();
+		// $('#abandonar').remove();
+		// $('#haAbandonado').remove();
+
 	}
 
 	this.limpiarJuego = function(){
@@ -264,7 +304,31 @@ function ControlWeb($){
 
 	this.llamarAJuego = function(){
 		this.limpiar();
-		$('#game').append('<div id="game-container"></div>');
+
+		cadena = "";
+		cadena = cadena + '<div id="game-container">';
+
+		cadena = cadena +'<div class="row">';
+			cadena = cadena +'<div class="col-md-5"></div>';
+			cadena = cadena +'<div class="col-md-2 ">';
+				cadena = cadena + '<button type="button" id="btnAbandonar" class="btn btn-primary btn-block" style="background-color:#D1D1C3;">Abandonar partida</button>';
+			cadena = cadena +'</div>';
+			cadena = cadena +'<div class="col-md-5"></div>';// aqui dentro ira la lista de jugadores 
+		cadena = cadena +'</div>';
+
+		cadena = cadena + '</div>';
+
+		//$('#game').append('<div id="game-container"> <button type="button" id="btnAbandonar" class="btn btn-primary btn-block" style="background-color:#F5830B;">Abandonar partida</button></div>');
+		$('#game').append(cadena);
+
+		$('#btnAbandonar').on('click',function(){
+			ws.abandonarPartida();
+			cw.limpiarJuego();
+	    	$('#modalGeneral').remove();
+	    	ws.reset();
+	    	cw.mostrarCrearPartida(4);
+	    	ws.listaPartidasDisponibles();
+		})
 	}
 
 }

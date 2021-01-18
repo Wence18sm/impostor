@@ -109,6 +109,7 @@ function ServidorWS(){
 
 		       		if(data.fase=="final"){
 		       			cli.enviarATodos(io,codigo,"finalPartida",partida.comprobarFinal());
+		       			juego.eliminarPartida(codigo);
 		       		}
 
 		       }else{
@@ -134,6 +135,7 @@ function ServidorWS(){
 		     	if(final!= undefined){
 
 		     		cli.enviarATodos(io,codigo,"finalPartida",final);
+		     		juego.eliminarPartida(codigo);
 		     	}
 
 
@@ -146,9 +148,12 @@ function ServidorWS(){
 
 		    socket.on('abandonarPartida', function(nick,codigo) {
 		    	var partida = juego.partidas[codigo];
-		    	
 		        juego.abandonarPartida(nick,codigo);
-		     	cli.enviarATodos(io,codigo,"abandonarPartida",{"nick":nick,"codigo":codigo});
+		        var data = {"nick":nick,"codigo":codigo};
+		     	//cli.enviarATodos(io,codigo,"jugadorHaAbandonado",data);
+		     	cli.enviarATodosMenosRemitente(socket,codigo,"jugadorHaAbandonado",data);
+		     	cli.enviarRemitente(socket,"hasAbandonadoLaPartida",data);
+
 		    });
 
 		    socket.on('estoyDentro', function(nick,codigo) {
@@ -164,7 +169,7 @@ function ServidorWS(){
 
 		    	//var datos = {nick:nick,numJugador:numJugador,direccion:direccion,x:x,y:y};
 
-		    	cli.enviarATodosMenosRemitente(socket,datos.codigo,"moverRemoto",datos)
+		    	cli.enviarATodosMenosRemitente(socket,datos.codigo,"moverRemoto",datos);
 		    	
 		    });
 
@@ -177,6 +182,7 @@ function ServidorWS(){
 		    	cli.enviarATodos(io,codigo,"porcentajeGlobal",data.Porcentaje);
 			    if (fase=="final"){
 			    	cli.enviarATodos(io, codigo, "final","ganan ciudadanos");
+			    	juego.eliminarPartida(codigo);
 			    }
 			
 		    	

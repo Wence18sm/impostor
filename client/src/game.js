@@ -569,7 +569,7 @@ function lanzarJuego(){
     var numJugador= jugadores[inocente].numJugador;
 
     var muerto = crear.physics.add.sprite(x,y,"tumba",8); 
-    ws.console("He dibujado la tumba")
+    //ws.console("He dibujado la tumba")
     muertos.add(muerto);
 
     crear.physics.add.overlap(player,muertos,votacion,()=>{return votarOn});
@@ -639,19 +639,19 @@ function lanzarJuego(){
   // }
   function mover(datos)
   {
-    var direccion = datos.direccion;
-    var nick = datos.nick;
-    var numJugador = datos.numJugador;
-    var x = datos.x;
-    var y = datos.y;
+     var direccion = datos.direccion;
+     var nick = datos.nick;
+     var numJugador = datos.numJugador;
+     var x = datos.x;
+     var y = datos.y;
 
     var remoto=jugadores[nick];
     const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
     const nombre=recursos[numJugador].sprite;
    if (remoto){
+    if (datos.estado != "abandonado" && (datos.estado!="fantasma" || ws.estado == "fantasma")) {
 
-    if (datos.estado!="fantasma" || ws.estado == "fantasma") {
       remoto.body.setVelocity(0);
       remoto.setX(x);
       remoto.setY(y);
@@ -671,6 +671,12 @@ function lanzarJuego(){
       remoto.visible = false;
     }
   }
+  }
+
+  function quitarSprite(nick){
+
+    jugadores[nick].destroy();
+
   }
 
   function finPartida (data){
