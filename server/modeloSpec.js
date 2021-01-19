@@ -39,11 +39,12 @@ describe("El juego del impostor", function() {
 	  	expect(juego.partidas[codigo].nickOwner).toEqual(nick);
 	  	//se comprueba el maximo que le hemos puesto a la partida (Condicion)
 	  	expect(juego.partidas[codigo].maximo).toEqual(4);
-	  	//se comprueba que al crearla esta en fase Inicial
-	  	expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
 	  	//se comprueba que cuando se crea y no se une nadie, solo debe de estar en owner en la partida
 	 	var num=Object.keys(juego.partidas[codigo].usuarios).length;
 	  	expect(num).toEqual(1);
+	  	//se comprueba que al crearla esta en fase Inicial
+	  	expect(juego.partidas[codigo].fase.nombre).toEqual("inicial");
+	  
 	  });
 
 	it("Varios usuarios se unen a la partida",function(){

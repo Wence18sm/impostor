@@ -75,12 +75,25 @@ function ClienteWS(){
 		console.log(msg);
 	}
 
+	this.resetGame = function(){
+		if(game){
+			game.destroy();
+		}
+		resetVar();
+	}
+
 	this.reset = function(){
 		this.codigo= undefined;
 		this.numJugador=undefined;
-	}
 
-	
+		this.impostor = false;
+		this.estado = undefined;
+		this.encargo = undefined;
+		this.owner = false;
+
+		this.resetGame();
+
+	}
 	
 	this.ini=function(){
 		this.socket=io.connect();
@@ -97,6 +110,7 @@ function ClienteWS(){
 		this.socket.on('partidaCreada',function(data){
 			cli.codigo = data.codigo;
 			cli.owner = true;
+			//cli.estado = "vivo";
 			console.log("Codigo partida: "+data.codigo);
 			console.log("Propietario: "+data.owner);
 			 if (data.codigo!='fallo'){
@@ -110,7 +124,7 @@ function ClienteWS(){
 			cli.codigo = data.codigo;
 			cli.maximo = data.maximo;
 			cli.numJugador=data.numJugador;
-			cli.estado = "vivo";
+			//cli.estado = "vivo";
 			console.log(data);
 			console.log("El usuario: "+data.nick+" se ha unido a la partida con el codigo: "+data.codigo);
 			if (data.nick!=""){
@@ -129,6 +143,7 @@ function ClienteWS(){
 
 		this.socket.on('partidaIniciada',function(fase){
 			console.log("La partida esta en fase: "+fase);
+			cli.estado="vivo";
 			cli.obtenerEncargo();
 			cw.limpiar();
 			cw.llamarAJuego();
@@ -146,6 +161,7 @@ function ClienteWS(){
 		});
 		this.socket.on('votacionLanzada',function(lista){
 			votarOn = false;
+			//report();
 			cw.mostrarModalVotacion(lista);
 			console.log(lista);
 		});
@@ -161,7 +177,7 @@ function ClienteWS(){
 
 			votarOn = true;
 
-			if(data.mgs == undefined){
+			if(data.msg == undefined){
 				cw.mostrarModalSaltarVotacion();
 			}else{
 				cw.mostrarModalMuerte(data.msg);

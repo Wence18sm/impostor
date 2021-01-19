@@ -52,6 +52,7 @@ function ControlWeb($){
 	}
 
 	this.mostrarEsperandoRival = function(){
+		
 		$('#mostrarER').remove();
 		var cadena = '<div id="mostrarER">';
 
@@ -116,7 +117,6 @@ function ControlWeb($){
 	}
 
 	this.mostrarUnirAPartida = function(lista){
-
 		$('#mostrarUP').remove();
 		var cadena = '<div id="mostrarUP">';
 		cadena = cadena +' <h3>Lista de partidas disponibles</h3>';
@@ -158,7 +158,6 @@ function ControlWeb($){
 	}
 
 	this.mostrarListaJugadores=function(lista){
-		//this.limpiar();
 	  	$('#mostrarListaEsperando').remove();
 	  	var cadena = '';
 	 	cadena= cadena +'<div id="mostrarListaEsperando"><h3>Jugadores en partida:</h3>';
@@ -171,42 +170,44 @@ function ControlWeb($){
 	}
 
 	this.mostrarModalSimple= function(msg){
+		this.limpiar();
 		$('#avisarImpostor').remove();
 		var cadena = "<p id='avisarImpostor'>"+msg+"</p>";
 		$('#contenidoModal').append(cadena)
 		$('#modalGeneral').modal("show");
 	}
 	this.mostrarModalTarea= function(tarea){
-		$('#avisarImpostor').remove();
-		$('#avisarTareas').remove();
+		this.limpiar();
+		//$('#avisarImpostor').remove();
+		//$('#avisarTareas').remove();
 		var cadena = "<p id='avisarTareas'>"+'La tarea que se te ha asignado es: '+tarea+"</p>";
 		$('#contenidoModal').append(cadena)
 		$('#modalGeneral').modal("show");
 	}
 
 	this.mostrarModalRealizarTarea= function(tarea){
-		$('#avisarImpostor').remove();
-		$('#avisarTareas').remove();
-		var cadena = "<p id=tarea'>"+'Debe realizar la tarea: '+tarea+"</p>";
+		this.limpiar();
+		//$('#avisarImpostor').remove();
+		//$('#avisarTareas').remove();
+		var cadena = "<p id='tarea'>"+'Debe realizar la tarea: '+tarea+"</p>";
 		$('#contenidoModalTareas').append(cadena);
 		$('#realizarTarea').modal("show");
 	}
 
 	this.mostrarFinalPartida= function(msg){
-		$('#avisarImpostor').remove();
-		$('#avisarTareas').remove();
-		var cadena = "<p id=final'>"+msg+"</p>";
+		this.limpiar();
+		//$('#avisarImpostor').remove();
+		//$('#avisarTareas').remove();
+		var cadena = "<p id='final'>"+msg+"</p>";
 		$('#contenidoModalFinal').append(cadena);
 		$('#finalPartida').modal("show");
 
 		$('#volverAlMenu').on('click',function(){
 	    	cw.limpiarJuego();
-	    	$('#modalGeneral').remove();
+	    	//$('#modalGeneral').remove();
 	    	ws.reset();
 	    	cw.mostrarCrearPartida(4);
 	    	ws.listaPartidasDisponibles();
-
-
 	    });
 	}
 
@@ -257,15 +258,16 @@ function ControlWeb($){
 	}
 
 	this.mostrarModalHeAbandonado= function(msg){
-		$('#avisarImpostor').remove();
-		$('#avisarTareas').remove();
-		var cadena = "<p id=abandonar'>"+msg+' como jugador abandono la partida.'+"</p>";
+		this.limpiar()
+		//$('#avisarImpostor').remove();
+		//$('#avisarTareas').remove();
+		var cadena = "<p id='abandonar'>"+msg+' como jugador abandono la partida.'+"</p>";
 		$('#contenidoModalAbandonar').append(cadena);
 		$('#abandonarPartida').modal("show");
 
 		$('#abandonarAlMenu').on('click',function(){
 	    	cw.limpiarJuego();
-	    	$('#modalGeneral').remove();
+	    	//$('#modalGeneral').remove();
 	    	ws.reset();
 	    	cw.mostrarCrearPartida(4);
 	    	ws.listaPartidasDisponibles();
@@ -285,14 +287,16 @@ function ControlWeb($){
 		$('#mostrarCP').remove();
 		$('#mostrarER').remove();
 		$('#mostrarListaEsperando').remove();
+		$('#modalGeneral').remove();
 		$('#avisarImpostor').remove();
 		$('#avisarTareas').remove();
 		$('#tarea').remove();
+		$('#final').remove();
 		$('#votacion').remove();
 		$('#muerte').remove();
 		$('#saltarVoto').remove();
-		// $('#abandonar').remove();
-		// $('#haAbandonado').remove();
+		$('#abandonar').remove();
+		$('#haAbandonado').remove();
 
 	}
 
@@ -324,11 +328,10 @@ function ControlWeb($){
 		$('#btnAbandonar').on('click',function(){
 			ws.abandonarPartida();
 			cw.limpiarJuego();
-	    	$('#modalGeneral').remove();
+	    	//$('#modalGeneral').remove();
 	    	ws.reset();
 	    	cw.mostrarCrearPartida(4);
 	    	ws.listaPartidasDisponibles();
 		})
 	}
-
 }

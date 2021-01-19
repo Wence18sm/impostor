@@ -47,8 +47,31 @@ function lanzarJuego(){
   var ataquesOn = true;
   var votarOn = true;
   var final = false;
+  var id;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"},
                 {frame:48,sprite:"mago"},{frame:51,sprite:"coletas"},{frame:54,sprite:"luchadora"},{frame:57,sprite:"luchador"}];
+
+  function resetVar(){
+       game = null;// = new Phaser.Game(config);
+       cursors = null;
+       player = null;
+       player2 = null;
+       jugadores={}; //la colección de jugadores remotos
+       showDebug = false;
+       camera = null;
+       worldLayer = null;
+       capaTareas = null;
+       map = null;
+       crear = null;
+       remotos = null;
+       muertos = null;
+       spawnPoint = null;
+       tareasOn = true;
+       ataquesOn = true;
+       votarOn = true;
+       final = false;
+       id = null;
+  }
 
   function preload() {
     this.load.image("tiles", "client/assets/tilesets/tuxmon-sample-32px-extruded.png");
@@ -582,7 +605,17 @@ function lanzarJuego(){
       votarOn=false;
       ws.console("He lanzado la votacion");
       ws.lanzarVotacion();
+
     }
+  }
+
+  function report(){
+    /*Esta funcion se encarga de eliminar todos las tumbas, 
+      si se ha llamado ha reportar*/
+    var i = 0;
+    for(i=0;i<muertos.children.size;i++){
+        muertos.children.entries[0].destroy();
+      }
   }
 
   function tareas(sprite,objeto){
@@ -602,7 +635,9 @@ function lanzarJuego(){
 
   function lanzarJugador(nick,numJugador){
     //var x =spawnPoint.x*numJugador*4+2;
-    player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[numJugador].frame);    
+    id = numJugador;
+
+    player = crear.physics.add.sprite(spawnPoint.x, spawnPoint.y,"varios",recursos[id].frame);    
     // Watch the player and worldLayer for collisions, for the duration of the scene:
     crear.physics.add.collider(player, worldLayer);
     crear.physics.add.collider(player, capaTareas,tareas,()=>{return tareasOn});
@@ -649,6 +684,8 @@ function lanzarJuego(){
     const speed = 175;
     //const prevVelocity = player.body.velocity.clone();
     const nombre=recursos[numJugador].sprite;
+
+   
    if (remoto){
     if (datos.estado != "abandonado" && (datos.estado!="fantasma" || ws.estado == "fantasma")) {
 
@@ -700,13 +737,15 @@ function lanzarJuego(){
     const prevVelocity = player.body.velocity.clone();
     var direccion="stop";
 
-    const nombre=recursos[ws.numJugador].sprite;
+    
+    //const nombre=recursos[ws.numJugador].sprite;
+    const nombre = recursos[id].sprite;
 
+    
     // Stop any previous movement from the last frame
     player.body.setVelocity(0);
     //player2.body.setVelocity(0);
 
-    
     // Horizontal movement
     if (cursors.left.isDown) {
       player.body.setVelocityX(-speed);
@@ -725,7 +764,7 @@ function lanzarJuego(){
     }
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
-
+    
     ws.movimiento(direccion,player.x,player.y);
 
     //Update the animation last and give left/right animations precedence over up/down animations
@@ -740,7 +779,6 @@ function lanzarJuego(){
     } else {
       player.anims.stop();
     }
-
 
       // If we were moving, pick and idle frame to use
       // if (prevVelocity.x < 0) player.setTexture("gabe", "gabe-left-walk");
