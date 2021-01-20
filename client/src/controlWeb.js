@@ -287,7 +287,6 @@ function ControlWeb($){
 		$('#mostrarCP').remove();
 		$('#mostrarER').remove();
 		$('#mostrarListaEsperando').remove();
-		$('#modalGeneral').remove();
 		$('#avisarImpostor').remove();
 		$('#avisarTareas').remove();
 		$('#tarea').remove();

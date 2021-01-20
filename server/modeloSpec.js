@@ -198,6 +198,7 @@ describe("El juego del impostor", function() {
 	})
 
 	it("Un Impostor ataca a un ciudadano",function(){
+		var partida = juego.partidas[codigo];
 		juego.unirAPartida(codigo,"ana");
 	  	var num=Object.keys(juego.partidas[codigo].usuarios).length;
 	  	expect(num).toEqual(2);
@@ -214,7 +215,11 @@ describe("El juego del impostor", function() {
 		juego.iniciarPartida(nick,codigo);
 		expect(juego.partidas[codigo].fase.nombre).toEqual("jugando");
 		//Un impostor ataca a un ciudadano.
-		impostor = juego.partidas[codigo].usuarioEsImpostor();
+
+		partida.usuarios["ana"].impostor= true;
+		partida.usuarios["tomas"].impostor= false;
+
+		impostor = partida.usuarios["ana"];
 		impostor.jugadorAtacaA("tomas");
 		expect(juego.partidas[codigo].usuarios["tomas"].estado.nombre).toEqual("fantasma");
 	});
@@ -282,10 +287,7 @@ describe("El juego del impostor", function() {
 	});
 
 
-
-
-
-	describe("las votaciones",function(){
+	describe("Votaciones, tareas, ataque y comprobacion de finales",function(){
 		beforeEach(function(){
 			juego.unirAPartida(codigo,"ana");
 			juego.unirAPartida(codigo,"isa");
@@ -293,21 +295,43 @@ describe("El juego del impostor", function() {
 			juego.iniciarPartida(nick,codigo);
 	  });
 
-		it("todos skipean",function(){
+		it("Todos los usuarios realizan las tareas menos uno",function(){
+			//iniciar la partida
+			//ajustar a mano el impostor
+			//atacar y comprobar 
 			var partida = juego.partidas[codigo];
-			juego.lanzarVotacion(nick,codigo);
-			expect(partida.fase.nombre).toEqual("votacion");
-			juego.saltarVoto(nick,codigo);
-			expect(partida.fase.nombre).toEqual("votacion");
-			juego.saltarVoto("ana",codigo);
-			expect(partida.fase.nombre).toEqual("votacion");
-			juego.saltarVoto("isa",codigo);
-			expect(partida.fase.nombre).toEqual("votacion");
-			juego.saltarVoto("tomas",codigo);
+
+			for (var i=0;i<9;i++){
+				for(var key in partida.usuarios){
+					partida.usuarios[key].realizarTarea();
+				}
+
 			expect(partida.fase.nombre).toEqual("jugando");
+			}
+
 		});
 
-		xit("se vota y mata a un inocente",function(){
+		it("Impostor ataca y muere un inocente",function(){
+			//iniciar la partida
+			//ajustar a mano el impostor
+			//atacar y comprobar 
+			var partida = juego.partidas[codigo];
+
+			partida.usuarios[nick].impostor= true;
+			partida.usuarios["ana"].impostor= false;
+			partida.usuarios["isa"].impostor= false;
+			partida.usuarios["tomas"].impostor= false;
+
+			expect(partida.fase.nombre).toEqual("jugando");
+
+			juego.atacar(nick,codigo,"ana");
+			//aqui muere ana
+			expect(partida.usuarios["ana"].estado.nombre).toEqual("fantasma");
+			expect(partida.fase.nombre).toEqual("jugando");
+
+		});
+
+		it("Se vota y mata a un inocente",function(){
 			var partida = juego.partidas[codigo];
 			juego.lanzarVotacion(nick,codigo);
 			partida.usuarios[nick].impostor= true;
@@ -326,7 +350,42 @@ describe("El juego del impostor", function() {
 			expect(partida.fase.nombre).toEqual("jugando");
 		});
 
-		it("Impostor ataca y muere un inocente",function(){
+		it("Todos skipean",function(){
+			var partida = juego.partidas[codigo];
+			juego.lanzarVotacion(nick,codigo);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.saltarVoto(nick,codigo);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.saltarVoto("ana",codigo);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.saltarVoto("isa",codigo);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.saltarVoto("tomas",codigo);
+			expect(partida.fase.nombre).toEqual("jugando");
+		});
+
+		
+
+		it("Se vota y se mata al impostor (comprobacion final ganan ciudadanos)",function(){
+			var partida = juego.partidas[codigo];
+			juego.lanzarVotacion(nick,codigo);
+			partida.usuarios[nick].impostor= true;
+			partida.usuarios["ana"].impostor= false;
+			partida.usuarios["isa"].impostor= false;
+			partida.usuarios["tomas"].impostor= false;
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.votar(nick,codigo,"tomas");
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.votar("ana",codigo,nick);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.votar("isa",codigo,nick);
+			expect(partida.fase.nombre).toEqual("votacion");
+			juego.votar("tomas",codigo,nick);
+			expect(partida.usuarios[nick].estado.nombre).toEqual("fantasma");
+			expect(partida.fase.nombre).toEqual("final");
+		});
+
+		it("Impostor ataca y mata a todos los inicentes menos uno (comprobacion final gana impostor)",function(){
 			//iniciar la partida
 			//ajustar a mano el impostor
 			//atacar y comprobar 
@@ -348,11 +407,9 @@ describe("El juego del impostor", function() {
 			//aqui muere ana
 			expect(partida.usuarios["isa"].estado.nombre).toEqual("fantasma");
 			expect(partida.fase.nombre).toEqual("final");
-
-
 		});
 
-		it("Realizar Tareas",function(){
+		it("Todos los usuarios realizan las tareas (comprobacion final ciudadanos)",function(){
 			//iniciar la partida
 			//ajustar a mano el impostor
 			//atacar y comprobar 

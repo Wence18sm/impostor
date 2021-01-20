@@ -49,7 +49,7 @@ function lanzarJuego(){
   var final = false;
   var id;
   var recursos=[{frame:0,sprite:"ana"},{frame:3,sprite:"pepe"},{frame:6,sprite:"tom"},{frame:9,sprite:"rayo"},
-                {frame:48,sprite:"mago"},{frame:51,sprite:"coletas"},{frame:54,sprite:"luchadora"},{frame:57,sprite:"luchador"}];
+                {frame:48,sprite:"mago"},{frame:51,sprite:"coletas"},{frame:54,sprite:"luchadora"},{frame:57,sprite:"luchador"},{frame:0,sprite:"rubia"},{frame:0,sprite:"soldado"}];
 
   function resetVar(){
        game = null;// = new Phaser.Game(config);
@@ -86,8 +86,9 @@ function lanzarJuego(){
 
     //Sprites
     //this.load.spritesheet("gabe","cliente/assets/images/gabe.png",{frameWidth:24,frameHeight:24});
-    //this.load.spritesheet("gabe","cliente/assets/images/male01-2.png",{frameWidth:32,frameHeight:32});
     this.load.spritesheet("varios","client/assets/images/final2.png",{frameWidth:24,frameHeight:32});
+    this.load.spritesheet("soldado","client/assets/images/Soldier_03-3.png",{frameWidth:32,frameHeight:32});
+    this.load.spritesheet("rubia","client/assets/images/Female_23-1.png",{frameWidth:32,frameHeight:32});
     this.load.spritesheet("tumba","client/assets/images/tumba.png",{frameWidth:32,frameHeight:64});
   }
 
@@ -129,8 +130,8 @@ function lanzarJuego(){
 
      const anims = crear.anims;
       anims.create({
-        key: "gabe-left-walk",
-        frames: anims.generateFrameNames("gabe", {
+        key: "soldado-left-walk",
+        frames: anims.generateFrameNames("soldado", {
           //prefix: "misa-left-walk.",
           start: 3,
           end: 5,
@@ -140,8 +141,8 @@ function lanzarJuego(){
         repeat: -1
       });
       anims.create({
-        key: "gabe-right-walk",
-        frames: anims.generateFrameNames("gabe", {
+        key: "soldado-right-walk",
+        frames: anims.generateFrameNames("soldado", {
           //prefix: "misa-left-walk.",
           start: 6,
           end: 8,
@@ -151,8 +152,8 @@ function lanzarJuego(){
         repeat: -1
       });
       anims.create({
-        key: "gabe-front-walk",
-        frames: anims.generateFrameNames("gabe", {
+        key: "soldado-front-walk",
+        frames: anims.generateFrameNames("soldado", {
           //prefix: "misa-left-walk.",
           start: 0,
           end: 2,
@@ -162,8 +163,8 @@ function lanzarJuego(){
         repeat: -1
       });
       anims.create({
-        key: "gabe-back-walk",
-        frames: anims.generateFrameNames("gabe", {
+        key: "soldado-back-walk",
+        frames: anims.generateFrameNames("soldado", {
           //prefix: "misa-left-walk.",
           start: 9,
           end: 11,
@@ -544,6 +545,52 @@ function lanzarJuego(){
           //prefix: "misa-left-walk.",
           start: 57,
           end: 59,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      //animacion rubia
+      const anims10 = crear.anims;
+      anims10.create({
+        key: "rubia-left-walk",
+        frames: anims.generateFrameNames("rubia", {
+          //prefix: "misa-left-walk.",
+          start: 3,
+          end: 5,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims10.create({
+        key: "rubia-right-walk",
+        frames: anims.generateFrameNames("rubia", {
+          //prefix: "misa-left-walk.",
+          start: 6,
+          end: 8,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims10.create({
+        key: "rubia-front-walk",
+        frames: anims.generateFrameNames("rubia", {
+          //prefix: "misa-left-walk.",
+          start: 0,
+          end: 2,
+          //zeroPad: 3
+        }),
+        //frameRate: 10,
+        repeat: -1
+      });
+      anims10.create({
+        key: "rubia-back-walk",
+        frames: anims.generateFrameNames("rubia", {
+          //prefix: "misa-left-walk.",
+          start: 9,
+          end: 11,
           //zeroPad: 3
         }),
         //frameRate: 10,

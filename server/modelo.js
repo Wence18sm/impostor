@@ -274,6 +274,10 @@ function Partida(num,owner,codigo,juego){
 	this.puedeAbandonarPartida = function(nick){
 		this.eliminarUsuario(nick);
 
+		if(this.fase.nombre =="completado"){
+			this.fase = new Inicial();
+		}
+
 		// if (!this.comprobarMinimo()){
 		// 	this.fase = new Inicial();
 		// }
